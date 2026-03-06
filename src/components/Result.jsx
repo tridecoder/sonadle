@@ -30,7 +30,7 @@ export default function Result({ solved, attemptsUsed, maxAttempts, gameNumber, 
       i === attemptsUsed - 1 && solved ? '\uD83D\uDFE9' : '\u2B1C'
     ).join('')
 
-    const text = `Sonadle #${gameNumber} — ${solved ? attemptsUsed : 'X'}/${maxAttempts}\n${emojis}\napp.jenesaispop.com/sonadle`
+    const text = `Sonadle #${gameNumber} — ${solved ? attemptsUsed : 'X'}/${maxAttempts}\n${emojis}\nsonadle.jenesaispop.com`
 
     navigator.clipboard.writeText(text).then(() => {
       setCopied(true)

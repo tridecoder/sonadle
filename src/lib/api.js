@@ -1,4 +1,4 @@
-const BASE = '/sonadle/api'
+const BASE = '/api'
 
 export async function fetchToday(attemptsUsed = 0) {
   const res = await fetch(`${BASE}/game/today?attempts=${attemptsUsed}`)
