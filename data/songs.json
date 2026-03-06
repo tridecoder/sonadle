@@ -1,5 +1,15 @@
 [
   {
+    "title": "A-Punk",
+    "artist": "Vampire Weekend",
+    "album": "Vampire Weekend",
+    "year": 2008,
+    "genre": "Indie",
+    "lyric_hint": "Johanna drove slowly into the city\nThe Hudson River all filled with snow",
+    "cover_url": "",
+    "difficulty": 3
+  },
+  {
     "title": "Linger",
     "artist": "The Cranberries",
     "album": "Everybody Else Is Doing It, So Why Can't We?",
@@ -18,16 +28,6 @@
     "lyric_hint": "It doesn't hurt me.\nDo you want to feel how it feels?",
     "cover_url": "",
     "difficulty": 2
-  },
-  {
-    "title": "A-Punk",
-    "artist": "Vampire Weekend",
-    "album": "Vampire Weekend",
-    "year": 2008,
-    "genre": "Indie",
-    "lyric_hint": "Johanna drove slowly into the city\nThe Hudson River all filled with snow",
-    "cover_url": "",
-    "difficulty": 3
   },
   {
     "title": "Belen",
