@@ -14,7 +14,7 @@ function loadSongs() {
 }
 
 // Fecha de inicio del juego — ajustar al dia de lanzamiento real
-const START_DATE = new Date('2026-04-01T00:00:00')
+const START_DATE = new Date('2026-03-06T00:00:00')
 
 /**
  * Devuelve la cancion del dia y el numero de partida.
