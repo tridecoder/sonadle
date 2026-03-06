@@ -1,0 +1,329 @@
+/* Sonadle — Estilos */
+
+/* ── Reset minimo ─────────────────────────────────────────────────────────── */
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  background: #fafafa;
+  color: #1a1a1a;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ── Variables ────────────────────────────────────────────────────────────── */
+
+:root {
+  --snd-color-bg:       #ffffff;
+  --snd-color-text:     #1a1a1a;
+  --snd-color-muted:    #666666;
+  --snd-color-border:   #e0e0e0;
+  --snd-color-primary:  #d4145a;
+  --snd-color-success:  #22c55e;
+  --snd-color-hint-bg:  #f5f5f5;
+  --snd-radius:         8px;
+  --snd-max-width:      560px;
+}
+
+/* ── Contenedor principal ─────────────────────────────────────────────────── */
+
+.snd-app {
+  max-width: var(--snd-max-width);
+  margin: 0 auto;
+  padding: 1.5rem 1rem;
+  min-height: 100dvh;
+  background: var(--snd-color-bg);
+}
+
+/* ── Loading ──────────────────────────────────────────────────────────────── */
+
+.snd-loading {
+  text-align: center;
+  padding: 4rem 0;
+  color: var(--snd-color-muted);
+}
+
+/* ── Header ───────────────────────────────────────────────────────────────── */
+
+.snd-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--snd-color-border);
+}
+
+.snd-title {
+  font-size: 1.5rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+
+.snd-meta {
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
+  font-size: 0.875rem;
+  color: var(--snd-color-muted);
+}
+
+/* ── Pistas ───────────────────────────────────────────────────────────────── */
+
+.snd-hints {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
+}
+
+.snd-hint {
+  background: var(--snd-color-hint-bg);
+  border-radius: var(--snd-radius);
+  padding: 1rem;
+  animation: snd-hint-in 0.3s ease;
+}
+
+@keyframes snd-hint-in {
+  from { opacity: 0; transform: translateY(-6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.snd-hint__label {
+  display: block;
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--snd-color-muted);
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+}
+
+.snd-hint--lyric blockquote,
+.snd-hint--lyric .snd-hint__value {
+  margin: 0;
+  font-style: italic;
+  line-height: 1.6;
+  white-space: pre-line;
+}
+
+.snd-hint__value--big {
+  font-size: 2rem;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.snd-hint__tag {
+  display: inline-block;
+  padding: 0.25rem 0.75rem;
+  background: var(--snd-color-border);
+  border-radius: 999px;
+  font-size: 0.875rem;
+}
+
+/* Portada pixelada */
+.snd-cover--pixel {
+  width: 80px;
+  height: 80px;
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+  object-fit: cover;
+  border-radius: 4px;
+}
+
+/* Portada semi-desvelada */
+.snd-cover--medium {
+  width: 160px;
+  height: 160px;
+  object-fit: cover;
+  border-radius: var(--snd-radius);
+  filter: blur(3px);
+}
+
+/* ── Campo de respuesta ───────────────────────────────────────────────────── */
+
+.snd-input-area {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+  position: relative;
+}
+
+.snd-autocomplete {
+  flex: 1;
+  position: relative;
+}
+
+.snd-input {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border: 2px solid var(--snd-color-border);
+  border-radius: var(--snd-radius);
+  font-size: 1rem;
+  font-family: inherit;
+  outline: none;
+  transition: border-color 0.15s;
+  background: var(--snd-color-bg);
+}
+
+.snd-input:focus {
+  border-color: var(--snd-color-primary);
+}
+
+.snd-suggestions {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  right: 0;
+  background: white;
+  border: 1px solid var(--snd-color-border);
+  border-radius: var(--snd-radius);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  list-style: none;
+  margin: 0;
+  padding: 0.25rem 0;
+  z-index: 100;
+  max-height: 240px;
+  overflow-y: auto;
+}
+
+.snd-suggestion {
+  padding: 0.6rem 1rem;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+}
+
+.snd-suggestion strong {
+  font-size: 0.9rem;
+}
+
+.snd-suggestion span {
+  font-size: 0.8rem;
+  color: var(--snd-color-muted);
+}
+
+.snd-suggestion:hover {
+  background: var(--snd-color-hint-bg);
+}
+
+/* ── Barra de intentos ────────────────────────────────────────────────────── */
+
+.snd-attempts-bar {
+  display: flex;
+  gap: 4px;
+  margin-bottom: 1.5rem;
+}
+
+.snd-attempt-slot {
+  flex: 1;
+  height: 6px;
+  background: var(--snd-color-border);
+  border-radius: 3px;
+  transition: background 0.2s;
+}
+
+.snd-attempt-slot--used {
+  background: var(--snd-color-primary);
+}
+
+/* ── Botones ──────────────────────────────────────────────────────────────── */
+
+.snd-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.75rem 1.25rem;
+  border: none;
+  border-radius: var(--snd-radius);
+  font-size: 1rem;
+  font-family: inherit;
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: none;
+  transition: opacity 0.15s;
+}
+
+.snd-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.snd-btn--primary {
+  background: var(--snd-color-primary);
+  color: white;
+  white-space: nowrap;
+}
+
+.snd-btn--primary:hover:not(:disabled) {
+  opacity: 0.85;
+}
+
+.snd-btn--share {
+  background: var(--snd-color-text);
+  color: white;
+  width: 100%;
+}
+
+/* ── Resultado ────────────────────────────────────────────────────────────── */
+
+.snd-result {
+  text-align: center;
+  padding: 1.5rem 0;
+}
+
+.snd-result__verdict {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: 0.75rem;
+}
+
+.snd-result__song {
+  margin-bottom: 0.5rem;
+  font-size: 1rem;
+}
+
+.snd-result__stats {
+  color: var(--snd-color-muted);
+  font-size: 0.875rem;
+  margin-bottom: 1.5rem;
+}
+
+.snd-result__share {
+  margin-bottom: 1rem;
+}
+
+.snd-share-confirm {
+  display: block;
+  font-size: 0.875rem;
+  color: var(--snd-color-success);
+  margin-top: 0.5rem;
+}
+
+.snd-result__countdown {
+  font-size: 0.875rem;
+  color: var(--snd-color-muted);
+  margin-top: 1rem;
+}
+
+/* ── Animaciones ──────────────────────────────────────────────────────────── */
+
+@keyframes snd-shake {
+  0%, 100% { transform: translateX(0); }
+  20%      { transform: translateX(-6px); }
+  60%      { transform: translateX(6px); }
+  80%      { transform: translateX(-3px); }
+}
+
+.snd-shake {
+  animation: snd-shake 0.4s ease;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .snd-hint, .snd-shake { animation: none; }
+  .snd-cover--medium { filter: blur(2px); }
+}

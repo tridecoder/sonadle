@@ -1,0 +1,9 @@
+{
+  "routes": [
+    { "src": "/sonadle/api/(.*)", "dest": "/api/$1" },
+    { "src": "/sonadle/assets/(.*)", "dest": "/assets/$1" },
+    { "src": "/sonadle/(.*\\.(png|jpg|svg|ico|webp|json|css|js))", "dest": "/$1" },
+    { "src": "/sonadle/(.*)", "dest": "/index.html" },
+    { "src": "/sonadle", "dest": "/index.html" }
+  ]
+}
