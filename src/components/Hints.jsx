@@ -1,5 +1,13 @@
 function HintCard({ hint }) {
   switch (hint.type) {
+    case 'emoji':
+      return (
+        <div className="snd-hint snd-hint--emoji">
+          <span className="snd-hint__label">Pista</span>
+          <span className="snd-hint__value snd-hint__value--emoji">{hint.value}</span>
+        </div>
+      )
+
     case 'lyric':
       return (
         <div className="snd-hint snd-hint--lyric">
