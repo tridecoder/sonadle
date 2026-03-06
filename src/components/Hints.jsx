@@ -11,7 +11,7 @@ function HintCard({ hint }) {
     case 'year':
       return (
         <div className="snd-hint snd-hint--year">
-          <span className="snd-hint__label">Ano</span>
+          <span className="snd-hint__label">Año</span>
           <span className="snd-hint__value snd-hint__value--big">{hint.value}</span>
         </div>
       )
@@ -19,7 +19,7 @@ function HintCard({ hint }) {
     case 'genre':
       return (
         <div className="snd-hint snd-hint--genre">
-          <span className="snd-hint__label">Genero</span>
+          <span className="snd-hint__label">Género</span>
           <span className="snd-hint__tag">{hint.value}</span>
         </div>
       )

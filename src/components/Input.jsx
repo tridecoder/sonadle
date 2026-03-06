@@ -71,7 +71,7 @@ export default function Input({ onSubmit, disabled }) {
         <input
           type="text"
           className="snd-input"
-          placeholder="Busca la cancion..."
+          placeholder="Busca la canción..."
           autoComplete="off"
           spellCheck="false"
           value={value}

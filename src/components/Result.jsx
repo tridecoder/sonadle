@@ -12,7 +12,7 @@ function Countdown() {
       const h = String(Math.floor(diff / 3600000)).padStart(2, '0')
       const m = String(Math.floor((diff % 3600000) / 60000)).padStart(2, '0')
       const s = String(Math.floor((diff % 60000) / 1000)).padStart(2, '0')
-      setText(`Nueva cancion en ${h}:${m}:${s}`)
+      setText(`Nueva canción en ${h}:${m}:${s}`)
     }
     update()
     const id = setInterval(update, 1000)
@@ -41,7 +41,7 @@ export default function Result({ solved, attemptsUsed, maxAttempts, gameNumber, 
   return (
     <div className="snd-result">
       <div className="snd-result__verdict">
-        {solved ? 'Lo has pillado!' : 'Esta vez no ha podido ser'}
+        {solved ? '¡Lo has pillado!' : 'Esta vez no ha podido ser'}
       </div>
 
       {song && (
@@ -61,7 +61,7 @@ export default function Result({ solved, attemptsUsed, maxAttempts, gameNumber, 
         <button className="snd-btn snd-btn--share" onClick={share}>
           Compartir resultado
         </button>
-        {copied && <span className="snd-share-confirm">Copiado!</span>}
+        {copied && <span className="snd-share-confirm">¡Copiado!</span>}
       </div>
 
       <Countdown />

@@ -10,12 +10,12 @@
     "difficulty": 2
   },
   {
-    "title": "Raul",
+    "title": "Raúl",
     "artist": "Vetusta Morla",
-    "album": "Mismo Sitio, Distinto Lugar",
+    "album": "Mismo sitio, distinto lugar",
     "year": 2017,
     "genre": "Indie",
-    "lyric_hint": "Y hoy quiero creer\nque no fue un sueno aquel pais",
+    "lyric_hint": "Y hoy quiero creer\nque no fue un sueño aquel país",
     "cover_url": "",
     "difficulty": 4
   },
@@ -40,12 +40,12 @@
     "difficulty": 3
   },
   {
-    "title": "Belen",
-    "artist": "Rosalia",
+    "title": "Belén",
+    "artist": "Rosalía",
     "album": "Motomami",
     "year": 2022,
     "genre": "Pop",
-    "lyric_hint": "Yo no quiero belen, belen, belen\nQue yo no quiero belen, belen",
+    "lyric_hint": "Yo no quiero belén, belén, belén\nQue yo no quiero belén, belén",
     "cover_url": "",
     "difficulty": 3
   }
