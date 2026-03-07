@@ -122,9 +122,24 @@ body {
   line-height: 1.4;
 }
 
+.snd-hint__value--keywords {
+  font-size: 1.25rem;
+  font-weight: 600;
+  font-style: italic;
+  line-height: 1.4;
+}
+
+.snd-hint__value--structure {
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 1.25rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  line-height: 1.4;
+}
+
 .snd-hint__value--initials {
   font-family: 'Courier New', Courier, monospace;
-  font-size: 1.5rem;
+  font-size: 1.25rem;
   font-weight: 700;
   letter-spacing: 0.08em;
   line-height: 1.4;

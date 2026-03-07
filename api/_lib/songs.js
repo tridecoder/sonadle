@@ -37,24 +37,36 @@ export function getTodaySong() {
 }
 
 /**
+ * Devuelve la estructura del titulo: guiones bajos sin letras.
+ * Ej: "Kill Bill" → "_ _ _ _  _ _ _ _"
+ */
+function getStructure(title) {
+  const clean = title.replace(/\(.*?\)/g, '').trim()
+  return clean
+    .split(/\s+/)
+    .map(w => w.split('').map(() => '_').join(' '))
+    .join('   ')
+}
+
+/**
  * Devuelve el titulo con solo la primera letra de cada palabra visible.
- * Ej: "Running Up That Hill" → "R______ U_ T___ H___"
+ * Ej: "Kill Bill" → "K___  B___"
  */
 function getInitials(title) {
   const clean = title.replace(/\(.*?\)/g, '').trim()
   return clean
     .split(/\s+/)
     .map(w => w[0] + '_'.repeat(w.length - 1))
-    .join(' ')
+    .join('  ')
 }
 
 /**
  * Devuelve las pistas desbloqueadas segun el numero de intentos usados.
- * Pista 1: siempre visible (iniciales del titulo)
+ * Pista 1: siempre visible (palabras clave + estructura del titulo)
  * Pista 2: tras intento 1 (año)
  * Pista 3: tras intento 2 (género)
  * Pista 4: tras intento 3 (artista)
- * Pista 5: tras intento 4 (emojis)
+ * Pista 5: tras intento 4 (titulo con iniciales)
  * Pista 6: tras intento 5 (fragmento de letra)
  */
 export function getHints(song, attemptsUsed) {
@@ -71,7 +83,13 @@ export function getHints(song, attemptsUsed) {
 function getHint(song, number) {
   switch (number) {
     case 1:
-      return { type: 'initials', value: getInitials(song.title) }
+      return {
+        type: 'clue',
+        value: {
+          keywords: song.keywords,
+          structure: getStructure(song.title),
+        },
+      }
     case 2:
       return { type: 'year', value: song.year }
     case 3:
@@ -79,7 +97,7 @@ function getHint(song, number) {
     case 4:
       return { type: 'artist', value: song.artist }
     case 5:
-      return { type: 'emoji', value: song.emoji_hint }
+      return { type: 'initials', value: getInitials(song.title) }
     case 6:
       return { type: 'lyric', value: song.lyric_hint }
     default:

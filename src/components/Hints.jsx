@@ -1,18 +1,20 @@
 function HintCard({ hint }) {
   switch (hint.type) {
+    case 'clue':
+      return (
+        <div className="snd-hint snd-hint--clue">
+          <span className="snd-hint__label">Palabras clave</span>
+          <span className="snd-hint__value snd-hint__value--keywords">{hint.value.keywords}</span>
+          <span className="snd-hint__label" style={{ marginTop: '0.75rem' }}>Título</span>
+          <span className="snd-hint__value snd-hint__value--structure">{hint.value.structure}</span>
+        </div>
+      )
+
     case 'initials':
       return (
         <div className="snd-hint snd-hint--initials">
           <span className="snd-hint__label">Título</span>
           <span className="snd-hint__value snd-hint__value--initials">{hint.value}</span>
-        </div>
-      )
-
-    case 'emoji':
-      return (
-        <div className="snd-hint snd-hint--emoji">
-          <span className="snd-hint__label">Pista</span>
-          <span className="snd-hint__value snd-hint__value--emoji">{hint.value}</span>
         </div>
       )
 
