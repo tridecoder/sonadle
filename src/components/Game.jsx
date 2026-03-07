@@ -24,6 +24,7 @@ export default function Game() {
     guess,
     timeLeft,
     score,
+    elapsedSeconds,
   } = useGame()
 
   if (loading) return <div className="snd-loading">Cargando...</div>
@@ -35,9 +36,10 @@ export default function Game() {
         <h1 className="snd-title">Sonadle</h1>
         <div className="snd-meta">
           <span className="snd-game-number">#{gameNumber}</span>
-          {!finished && <Timer timeLeft={timeLeft} />}
         </div>
       </header>
+
+      {!finished && <Timer timeLeft={timeLeft} maxTime={120} />}
 
       <ClueStack clue={clue} progressiveClues={progressiveClues} />
 
@@ -58,6 +60,7 @@ export default function Game() {
           song={revealedSong}
           usedLetters={usedLetters}
           score={score}
+          elapsedSeconds={elapsedSeconds}
         />
       )}
     </>

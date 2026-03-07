@@ -3,7 +3,7 @@ import { fetchToday, guessLetter } from '../lib/api'
 
 const STORAGE_KEY = 'sonadle_v34'
 const MAX_WRONG = 5
-const TIME_LIMIT = 90
+const TIME_LIMIT = 120
 
 function getTodayStr() {
   return new Date().toLocaleDateString('en-CA', { timeZone: 'Europe/Madrid' })
@@ -53,6 +53,7 @@ export function useGame() {
   const [startTime, setStartTime] = useState(null)
   const [timeLeft, setTimeLeft] = useState(TIME_LIMIT)
   const [score, setScore] = useState(0)
+  const [elapsedSeconds, setElapsedSeconds] = useState(null)
 
   const startTimeRef = useRef(null)
   const wrongCountRef = useRef(0)
@@ -78,6 +79,7 @@ export function useGame() {
       revealedSong,
       startTime,
       score,
+      elapsedSeconds,
     })
   }, [loading, gameNumber, revealedPositions, usedLetters, wrongCount, progressiveClues, finished, solved, revealedSong, startTime, score])
 
@@ -97,6 +99,7 @@ export function useGame() {
         setSolved(saved.solved)
         if (saved.revealedSong) setRevealedSong(saved.revealedSong)
         if (saved.score !== undefined) setScore(saved.score)
+        if (saved.elapsedSeconds !== undefined) setElapsedSeconds(saved.elapsedSeconds)
 
         if (saved.startTime && !saved.finished) {
           const elapsed = (Date.now() - saved.startTime) / 1000
@@ -188,7 +191,9 @@ export function useGame() {
       setSolved(nowSolved)
 
       if (nowSolved) {
+        const elapsed = Math.round((Date.now() - startTimeRef.current) / 1000)
         setScore(calcScore(startTimeRef.current, newWrongCount))
+        setElapsedSeconds(elapsed)
       }
 
       if (nowFinished) {
@@ -217,5 +222,6 @@ export function useGame() {
     guess,
     timeLeft,
     score,
+    elapsedSeconds,
   }
 }

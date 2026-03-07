@@ -11,21 +11,25 @@ function Countdown() {
       const h = String(Math.floor(diff / 3600000)).padStart(2, '0')
       const m = String(Math.floor((diff % 3600000) / 60000)).padStart(2, '0')
       const s = String(Math.floor((diff % 60000) / 1000)).padStart(2, '0')
-      setText(`Nueva canción en ${h}:${m}:${s}`)
+      setText(`${h}:${m}:${s}`)
     }
     update()
     const id = setInterval(update, 1000)
     return () => clearInterval(id)
   }, [])
-  return <div className="snd-result__countdown">{text}</div>
+  return (
+    <div className="snd-result__next">
+      <span className="snd-result__next-label">Próxima canción en</span>
+      <span className="snd-result__next-time">{text}</span>
+    </div>
+  )
 }
 
-export default function Result({ solved, wrongCount, maxWrong, gameNumber, song, usedLetters, score }) {
+export default function Result({ solved, wrongCount, maxWrong, gameNumber, song, usedLetters, score, elapsedSeconds }) {
   const [copied, setCopied] = useState(false)
 
   function share() {
-    const wrong = wrongCount
-    const squares = Array.from({ length: maxWrong }, (_, i) => i < wrong ? '🟥' : '⬜').join('')
+    const squares = Array.from({ length: maxWrong }, (_, i) => i < wrongCount ? '🟥' : '⬜').join('')
     const scoreStr = solved ? `${score} pts` : 'sin resolver'
     const text = `Sonadle #${gameNumber} — ${scoreStr}\n${squares}\nsonadle.jenesaispop.com`
     navigator.clipboard.writeText(text).then(() => {
@@ -36,36 +40,36 @@ export default function Result({ solved, wrongCount, maxWrong, gameNumber, song,
 
   return (
     <div className="snd-result">
-      <div className="snd-result__verdict">
+      <div className={`snd-result__verdict ${solved ? 'snd-result__verdict--win' : 'snd-result__verdict--lose'}`}>
         {solved ? '¡Lo has pillado!' : 'Esta vez no ha podido ser'}
       </div>
 
       {song && (
-        <div className="snd-result__song">
-          <div className="snd-result__title">{song.title}</div>
-          <div className="snd-result__artist">{song.artist}</div>
-          {song.album && <div className="snd-result__album">{song.album}</div>}
+        <div className="snd-result__song-card">
+          <div className="snd-result__song-title">{song.title}</div>
+          <div className="snd-result__song-artist">{song.artist}</div>
+          {song.album && <div className="snd-result__song-album">{song.album}</div>}
         </div>
       )}
 
-      <div className={`snd-result__stats${solved ? '' : ' snd-result__stats--alone'}`}>
-        {solved
-          ? <><span className="snd-result__score">{score}</span> puntos</>
-          : 'Sin puntos hoy'
-        }
-      </div>
-
-      {solved && (
-        <div className="snd-result__breakdown">
-          {wrongCount} fallo{wrongCount === 1 ? '' : 's'}
+      {solved ? (
+        <div className="snd-result__score-block">
+          <div className="snd-result__score-number">{score}</div>
+          <div className="snd-result__score-label">puntos</div>
+          <div className="snd-result__score-detail">
+            {elapsedSeconds !== null && <span>{elapsedSeconds}s</span>}
+            <span>·</span>
+            <span>{wrongCount} fallo{wrongCount === 1 ? '' : 's'}</span>
+          </div>
         </div>
+      ) : (
+        <div className="snd-result__no-score">Sin puntos hoy</div>
       )}
 
-      <div className="snd-result__share">
+      <div className="snd-result__actions">
         <button className="snd-btn snd-btn--share" onClick={share}>
-          Compartir resultado
+          {copied ? '¡Copiado!' : 'Compartir resultado'}
         </button>
-        {copied && <span className="snd-share-confirm">¡Copiado!</span>}
       </div>
 
       <Countdown />
