@@ -15,6 +15,12 @@ function loadSongs() {
 
 const START_DATE = new Date('2026-03-06T00:00:00')
 
+export function getSongByIndex(index) {
+  const songs = loadSongs()
+  const songIndex = ((index % songs.length) + songs.length) % songs.length
+  return songs[songIndex]
+}
+
 export function getTodaySong() {
   const songs = loadSongs()
   const now = new Date()

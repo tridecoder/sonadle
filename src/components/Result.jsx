@@ -20,14 +20,14 @@ function Countdown() {
   return <div className="snd-result__countdown">{text}</div>
 }
 
-export default function Result({ solved, wrongCount, maxWrong, gameNumber, song, usedLetters }) {
+export default function Result({ solved, wrongCount, maxWrong, gameNumber, song, usedLetters, score }) {
   const [copied, setCopied] = useState(false)
 
   function share() {
-    const correct = Object.values(usedLetters).filter(v => v === 'correct').length
     const wrong = wrongCount
     const squares = Array.from({ length: maxWrong }, (_, i) => i < wrong ? '🟥' : '⬜').join('')
-    const text = `Sonadle #${gameNumber} — ${solved ? `${wrong} fallos` : 'sin resolver'}\n${squares}\nsonadle.jenesaispop.com`
+    const scoreStr = solved ? `${score} pts` : 'sin resolver'
+    const text = `Sonadle #${gameNumber} — ${scoreStr}\n${squares}\nsonadle.jenesaispop.com`
     navigator.clipboard.writeText(text).then(() => {
       setCopied(true)
       setTimeout(() => setCopied(false), 2000)
@@ -48,9 +48,18 @@ export default function Result({ solved, wrongCount, maxWrong, gameNumber, song,
         </div>
       )}
 
-      <div className="snd-result__stats">
-        {solved ? `${wrongCount} fallo${wrongCount === 1 ? '' : 's'}` : 'Sin puntos hoy'}
+      <div className={`snd-result__stats${solved ? '' : ' snd-result__stats--alone'}`}>
+        {solved
+          ? <><span className="snd-result__score">{score}</span> puntos</>
+          : 'Sin puntos hoy'
+        }
       </div>
+
+      {solved && (
+        <div className="snd-result__breakdown">
+          {wrongCount} fallo{wrongCount === 1 ? '' : 's'}
+        </div>
+      )}
 
       <div className="snd-result__share">
         <button className="snd-btn snd-btn--share" onClick={share}>

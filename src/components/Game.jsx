@@ -4,6 +4,7 @@ import TitleDisplay from './TitleDisplay'
 import Lives from './Lives'
 import Keyboard from './Keyboard'
 import Result from './Result'
+import Timer from './Timer'
 
 export default function Game() {
   const {
@@ -21,6 +22,8 @@ export default function Game() {
     solved,
     revealedSong,
     guess,
+    timeLeft,
+    score,
   } = useGame()
 
   if (loading) return <div className="snd-loading">Cargando...</div>
@@ -32,6 +35,7 @@ export default function Game() {
         <h1 className="snd-title">Sonadle</h1>
         <div className="snd-meta">
           <span className="snd-game-number">#{gameNumber}</span>
+          {!finished && <Timer timeLeft={timeLeft} />}
         </div>
       </header>
 
@@ -53,6 +57,7 @@ export default function Game() {
           gameNumber={gameNumber}
           song={revealedSong}
           usedLetters={usedLetters}
+          score={score}
         />
       )}
     </>

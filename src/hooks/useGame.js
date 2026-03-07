@@ -1,8 +1,9 @@
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useCallback, useRef } from 'react'
 import { fetchToday, guessLetter } from '../lib/api'
 
-const STORAGE_KEY = 'sonadle_v33'
-const MAX_WRONG = 6
+const STORAGE_KEY = 'sonadle_v34'
+const MAX_WRONG = 5
+const TIME_LIMIT = 90
 
 function getTodayStr() {
   return new Date().toLocaleDateString('en-CA', { timeZone: 'Europe/Madrid' })
@@ -24,33 +25,45 @@ function saveState(state) {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(state))
 }
 
-/**
- * Comprueba si todas las letras del titulo han sido adivinadas.
- * titleDisplay: array de chars (' ', '_', o char especial)
- * revealedPositions: { letter: [indices] }
- */
 function checkSolved(titleDisplay, revealedPositions) {
   const allRevealed = new Set(Object.values(revealedPositions).flat())
   return titleDisplay.every((c, i) => c !== '_' || allRevealed.has(i))
 }
+
+function calcScore(startTime, wrongCount) {
+  const elapsed = (Date.now() - startTime) / 1000
+  return Math.max(0, Math.round(1000 - elapsed * 10 - wrongCount * 100))
+}
+
+const devIndex = new URLSearchParams(window.location.search).get('i')
 
 export function useGame() {
   const [loading, setLoading] = useState(true)
   const [gameNumber, setGameNumber] = useState(null)
   const [clue, setClue] = useState(null)
   const [titleDisplay, setTitleDisplay] = useState([])
-  const [revealedPositions, setRevealedPositions] = useState({}) // { 'a': [0, 4, 7] }
-  const [usedLetters, setUsedLetters] = useState({})             // { 'a': 'correct'|'wrong' }
+  const [revealedPositions, setRevealedPositions] = useState({})
+  const [usedLetters, setUsedLetters] = useState({})
   const [wrongCount, setWrongCount] = useState(0)
   const [progressiveClues, setProgressiveClues] = useState([])
   const [finished, setFinished] = useState(false)
   const [solved, setSolved] = useState(false)
   const [revealedSong, setRevealedSong] = useState(null)
   const [error, setError] = useState(null)
+  const [startTime, setStartTime] = useState(null)
+  const [timeLeft, setTimeLeft] = useState(TIME_LIMIT)
+  const [score, setScore] = useState(0)
 
-  // Auto-guardar en localStorage cada vez que cambia el estado del juego
+  const startTimeRef = useRef(null)
+  const wrongCountRef = useRef(0)
+  const timedOutRef = useRef(false)
+
+  useEffect(() => { startTimeRef.current = startTime }, [startTime])
+  useEffect(() => { wrongCountRef.current = wrongCount }, [wrongCount])
+
+  // Auto-guardar en localStorage (desactivado en modo dev ?i=N)
   useEffect(() => {
-    if (loading || !gameNumber) return
+    if (loading || !gameNumber || devIndex !== null) return
     saveState({
       date: getTodayStr(),
       gameNumber,
@@ -63,12 +76,14 @@ export function useGame() {
       finished,
       solved,
       revealedSong,
+      startTime,
+      score,
     })
-  }, [loading, gameNumber, revealedPositions, usedLetters, wrongCount, progressiveClues, finished, solved, revealedSong])
+  }, [loading, gameNumber, revealedPositions, usedLetters, wrongCount, progressiveClues, finished, solved, revealedSong, startTime, score])
 
   useEffect(() => {
     async function init() {
-      const saved = loadState()
+      const saved = devIndex === null ? loadState() : null
 
       if (saved) {
         setGameNumber(saved.gameNumber)
@@ -81,6 +96,28 @@ export function useGame() {
         setFinished(saved.finished)
         setSolved(saved.solved)
         if (saved.revealedSong) setRevealedSong(saved.revealedSong)
+        if (saved.score !== undefined) setScore(saved.score)
+
+        if (saved.startTime && !saved.finished) {
+          const elapsed = (Date.now() - saved.startTime) / 1000
+          if (elapsed >= TIME_LIMIT) {
+            // Se acabó el tiempo mientras no estaba
+            timedOutRef.current = true
+            setTimeLeft(0)
+            setFinished(true)
+            setSolved(false)
+            try {
+              const finalRes = await guessLetter('', saved.wrongCount || 0, true)
+              if (finalRes.revealed) setRevealedSong(finalRes.revealed)
+            } catch {}
+          } else {
+            setStartTime(saved.startTime)
+            setTimeLeft(Math.ceil(TIME_LIMIT - elapsed))
+          }
+        } else if (saved.startTime) {
+          setStartTime(saved.startTime)
+        }
+
         setLoading(false)
         return
       }
@@ -90,6 +127,7 @@ export function useGame() {
         setGameNumber(data.game_number)
         setClue(data.clue)
         setTitleDisplay(data.title_display)
+        setStartTime(Date.now())
       } catch (err) {
         setError('No se pudo cargar el juego')
         console.error('[Sonadle]', err)
@@ -100,6 +138,28 @@ export function useGame() {
 
     init()
   }, [])
+
+  // Countdown
+  useEffect(() => {
+    if (loading || finished || !startTime) return
+
+    const id = setInterval(() => {
+      const elapsed = (Date.now() - startTimeRef.current) / 1000
+      const remaining = Math.max(0, Math.ceil(TIME_LIMIT - elapsed))
+      setTimeLeft(remaining)
+
+      if (remaining <= 0 && !timedOutRef.current) {
+        timedOutRef.current = true
+        setFinished(true)
+        setSolved(false)
+        guessLetter('', wrongCountRef.current, true)
+          .then(res => { if (res.revealed) setRevealedSong(res.revealed) })
+          .catch(() => {})
+      }
+    }, 250)
+
+    return () => clearInterval(id)
+  }, [loading, finished, startTime])
 
   const guess = useCallback(async (letter) => {
     if (finished || usedLetters[letter]) return
@@ -127,6 +187,10 @@ export function useGame() {
       setFinished(nowFinished)
       setSolved(nowSolved)
 
+      if (nowSolved) {
+        setScore(calcScore(startTimeRef.current, newWrongCount))
+      }
+
       if (nowFinished) {
         const finalRes = await guessLetter(letter, newWrongCount, true)
         if (finalRes.revealed) setRevealedSong(finalRes.revealed)
@@ -151,5 +215,7 @@ export function useGame() {
     solved,
     revealedSong,
     guess,
+    timeLeft,
+    score,
   }
 }

@@ -46,7 +46,24 @@ body {
   border-bottom: 1px solid var(--snd-border);
 }
 .snd-title { font-size: 1.5rem; font-weight: 800; letter-spacing: -0.02em; }
-.snd-meta  { font-size: 0.875rem; color: var(--snd-muted); }
+.snd-meta  { display: flex; align-items: center; gap: 0.75rem; font-size: 0.875rem; color: var(--snd-muted); }
+
+/* ── Timer ── */
+.snd-timer {
+  font-size: 0.875rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  color: var(--snd-muted);
+  transition: color 0.3s;
+}
+.snd-timer--urgent {
+  color: var(--snd-error);
+  animation: snd-pulse 0.8s ease infinite alternate;
+}
+@keyframes snd-pulse {
+  from { opacity: 1; }
+  to   { opacity: 0.5; }
+}
 
 /* ── Pistas ── */
 .snd-clue-stack {
@@ -178,7 +195,10 @@ body {
 .snd-result__title    { font-size: 1.4rem; font-weight: 800; line-height: 1.2; margin-bottom: 0.25rem; }
 .snd-result__artist   { font-size: 1.1rem; color: var(--snd-primary); font-weight: 600; }
 .snd-result__album    { font-size: 0.85rem; color: var(--snd-muted); font-style: italic; margin-top: 0.15rem; }
-.snd-result__stats    { color: var(--snd-muted); font-size: 0.875rem; margin-bottom: 1.5rem; }
+.snd-result__stats    { font-size: 1.1rem; font-weight: 600; margin-bottom: 0.25rem; color: var(--snd-muted); }
+.snd-result__stats--alone { margin-bottom: 1.5rem; }
+.snd-result__score    { font-size: 2.5rem; font-weight: 800; color: var(--snd-primary); }
+.snd-result__breakdown { font-size: 0.875rem; color: var(--snd-muted); margin-bottom: 1.5rem; }
 .snd-result__share    { margin-bottom: 1rem; }
 .snd-result__countdown { font-size: 0.875rem; color: var(--snd-muted); margin-top: 1rem; }
 
@@ -213,7 +233,7 @@ body {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .snd-title-slot--revealed, .snd-progressive-clue { animation: none; }
+  .snd-title-slot--revealed, .snd-progressive-clue, .snd-timer--urgent { animation: none; }
 }
 
 @media (max-width: 400px) {
