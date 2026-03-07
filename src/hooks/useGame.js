@@ -48,6 +48,24 @@ export function useGame() {
   const [revealedSong, setRevealedSong] = useState(null)
   const [error, setError] = useState(null)
 
+  // Auto-guardar en localStorage cada vez que cambia el estado del juego
+  useEffect(() => {
+    if (loading || !gameNumber) return
+    saveState({
+      date: getTodayStr(),
+      gameNumber,
+      clue,
+      titleDisplay,
+      revealedPositions,
+      usedLetters,
+      wrongCount,
+      progressiveClues,
+      finished,
+      solved,
+      revealedSong,
+    })
+  }, [loading, gameNumber, revealedPositions, usedLetters, wrongCount, progressiveClues, finished, solved, revealedSong])
+
   useEffect(() => {
     async function init() {
       const saved = loadState()
@@ -72,19 +90,6 @@ export function useGame() {
         setGameNumber(data.game_number)
         setClue(data.clue)
         setTitleDisplay(data.title_display)
-        saveState({
-          date: getTodayStr(),
-          gameNumber: data.game_number,
-          clue: data.clue,
-          titleDisplay: data.title_display,
-          revealedPositions: {},
-          usedLetters: {},
-          wrongCount: 0,
-          progressiveClues: [],
-          finished: false,
-          solved: false,
-          revealedSong: null,
-        })
       } catch (err) {
         setError('No se pudo cargar el juego')
         console.error('[Sonadle]', err)
@@ -98,9 +103,6 @@ export function useGame() {
 
   const guess = useCallback(async (letter) => {
     if (finished || usedLetters[letter]) return
-
-    const isLastWrong = !titleDisplay.includes('_') // shouldn't happen but guard
-    const wouldFinish = wrongCount + 1 >= MAX_WRONG
 
     try {
       const res = await guessLetter(letter, wrongCount, false)
@@ -118,38 +120,21 @@ export function useGame() {
       const nowSolved = res.correct && checkSolved(titleDisplay, newRevealedPositions)
       const nowFinished = nowSolved || newWrongCount >= MAX_WRONG
 
-      let revealed = null
-      if (nowFinished) {
-        // Pedir reveal al servidor
-        const finalRes = await guessLetter(letter, res.wrong_count, true)
-        revealed = finalRes.revealed || null
-      }
-
       setRevealedPositions(newRevealedPositions)
       setUsedLetters(newUsedLetters)
       setWrongCount(newWrongCount)
       setProgressiveClues(newProgressiveClues)
       setFinished(nowFinished)
       setSolved(nowSolved)
-      if (revealed) setRevealedSong(revealed)
 
-      saveState({
-        date: getTodayStr(),
-        gameNumber,
-        clue,
-        titleDisplay,
-        revealedPositions: newRevealedPositions,
-        usedLetters: newUsedLetters,
-        wrongCount: newWrongCount,
-        progressiveClues: newProgressiveClues,
-        finished: nowFinished,
-        solved: nowSolved,
-        revealedSong: revealed,
-      })
+      if (nowFinished) {
+        const finalRes = await guessLetter(letter, newWrongCount, true)
+        if (finalRes.revealed) setRevealedSong(finalRes.revealed)
+      }
     } catch (err) {
       console.error('[Sonadle] Error al adivinar letra:', err)
     }
-  }, [finished, usedLetters, wrongCount, revealedPositions, progressiveClues, titleDisplay, gameNumber, clue])
+  }, [finished, usedLetters, wrongCount, revealedPositions, progressiveClues, titleDisplay])
 
   return {
     loading,
