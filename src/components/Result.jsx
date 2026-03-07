@@ -22,20 +22,19 @@ function Countdown() {
   return <div className="snd-result__countdown">{text}</div>
 }
 
-export default function Result({ solved, attemptsUsed, questionsUsed, maxAttempts, gameNumber, song, guesses, answers }) {
+export default function Result({ solved, attemptsUsed, maxAttempts, gameNumber, song, eliminated }) {
   const [copied, setCopied] = useState(false)
 
   function share() {
-    const guessLine = (guesses || []).map(g => g.correct ? '✅' : '❌').join('')
-    const questionLine = questionsUsed > 0 ? `❓x${questionsUsed}` : ''
+    const squares = Array.from({ length: maxAttempts }, (_, i) => {
+      if (i < eliminated.length) return '🟥'
+      if (i === eliminated.length && solved) return '🟩'
+      return '⬜'
+    }).join('')
 
-    const lines = [
-      `Sonadle #${gameNumber} — ${solved ? attemptsUsed : 'X'}/${maxAttempts}`,
-      [questionLine, guessLine].filter(Boolean).join('  '),
-      'sonadle.jenesaispop.com',
-    ]
+    const text = `Sonadle #${gameNumber} — ${solved ? attemptsUsed : 'X'}/${maxAttempts}\n${squares}\nsonadle.jenesaispop.com`
 
-    navigator.clipboard.writeText(lines.join('\n')).then(() => {
+    navigator.clipboard.writeText(text).then(() => {
       setCopied(true)
       setTimeout(() => setCopied(false), 2000)
     })
@@ -57,7 +56,7 @@ export default function Result({ solved, attemptsUsed, questionsUsed, maxAttempt
 
       <div className="snd-result__stats">
         {solved
-          ? `En ${attemptsUsed} intento${attemptsUsed === 1 ? '' : 's'}${questionsUsed > 0 ? ` · ${questionsUsed} pregunta${questionsUsed === 1 ? '' : 's'}` : ''}`
+          ? `En ${attemptsUsed} intento${attemptsUsed === 1 ? '' : 's'}`
           : 'Sin puntos hoy'
         }
       </div>

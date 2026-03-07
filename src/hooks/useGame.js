@@ -1,9 +1,8 @@
 import { useState, useEffect, useCallback } from 'react'
-import { fetchToday, submitAttempt, askQuestion } from '../lib/api'
+import { fetchToday, submitAttempt } from '../lib/api'
 
-const STORAGE_KEY = 'sonadle_v31'
-const MAX_ATTEMPTS = 4
-const MAX_QUESTIONS = 5
+const STORAGE_KEY = 'sonadle_v32'
+const MAX_ATTEMPTS = 5
 
 function getTodayStr() {
   return new Date().toLocaleDateString('en-CA', { timeZone: 'Europe/Madrid' })
@@ -29,10 +28,10 @@ export function useGame() {
   const [loading, setLoading] = useState(true)
   const [gameNumber, setGameNumber] = useState(null)
   const [clue, setClue] = useState(null)
-  const [guesses, setGuesses] = useState([])           // [{ title, correct }]
-  const [answers, setAnswers] = useState([])            // [{ question, answer }]
+  const [options, setOptions] = useState([])           // [{ title, artist }] — orden fijo todo el día
+  const [eliminated, setEliminated] = useState([])    // títulos eliminados
+  const [progressiveClues, setProgressiveClues] = useState([])  // pistas reveladas tras cada fallo
   const [attemptsUsed, setAttemptsUsed] = useState(0)
-  const [questionsUsed, setQuestionsUsed] = useState(0)
   const [finished, setFinished] = useState(false)
   const [solved, setSolved] = useState(false)
   const [revealedSong, setRevealedSong] = useState(null)
@@ -45,10 +44,10 @@ export function useGame() {
       if (saved) {
         setGameNumber(saved.gameNumber)
         setClue(saved.clue)
-        setGuesses(saved.guesses || [])
-        setAnswers(saved.answers || [])
+        setOptions(saved.options)
+        setEliminated(saved.eliminated || [])
+        setProgressiveClues(saved.progressiveClues || [])
         setAttemptsUsed(saved.attemptsUsed)
-        setQuestionsUsed(saved.questionsUsed)
         setFinished(saved.finished)
         setSolved(saved.solved)
         if (saved.revealedSong) setRevealedSong(saved.revealedSong)
@@ -60,14 +59,15 @@ export function useGame() {
         const data = await fetchToday()
         setGameNumber(data.game_number)
         setClue(data.clue)
+        setOptions(data.options)
         saveState({
           date: getTodayStr(),
           gameNumber: data.game_number,
           clue: data.clue,
-          guesses: [],
-          answers: [],
+          options: data.options,
+          eliminated: [],
+          progressiveClues: [],
           attemptsUsed: 0,
-          questionsUsed: 0,
           finished: false,
           solved: false,
           revealedSong: null,
@@ -91,10 +91,14 @@ export function useGame() {
     try {
       const res = await submitAttempt(title, nextAttempt)
 
-      const newGuesses = [...guesses, { title: res.guess, correct: res.is_correct }]
+      const newEliminated = res.is_correct ? eliminated : [...eliminated, title]
+      const newProgressiveClues = res.progressive_clue
+        ? [...progressiveClues, res.progressive_clue]
+        : progressiveClues
       const revealed = res.revealed || null
 
-      setGuesses(newGuesses)
+      setEliminated(newEliminated)
+      setProgressiveClues(newProgressiveClues)
       setAttemptsUsed(res.attempt_num)
       setFinished(res.finished)
       setSolved(res.solved)
@@ -104,10 +108,10 @@ export function useGame() {
         date: getTodayStr(),
         gameNumber,
         clue,
-        guesses: newGuesses,
-        answers,
+        options,
+        eliminated: newEliminated,
+        progressiveClues: newProgressiveClues,
         attemptsUsed: res.attempt_num,
-        questionsUsed,
         finished: res.finished,
         solved: res.solved,
         revealedSong: revealed,
@@ -119,56 +123,21 @@ export function useGame() {
       setError('Error al enviar la respuesta')
       return null
     }
-  }, [finished, attemptsUsed, guesses, answers, gameNumber, clue, questionsUsed])
-
-  const question = useCallback(async (questionKey) => {
-    if (finished || questionsUsed >= MAX_QUESTIONS) return null
-    if (answers.find(a => a.question === questionKey)) return null
-
-    try {
-      const res = await askQuestion(questionKey)
-
-      const newAnswers = [...answers, { question: res.question, answer: res.answer }]
-      const newQuestionsUsed = questionsUsed + 1
-
-      setAnswers(newAnswers)
-      setQuestionsUsed(newQuestionsUsed)
-
-      saveState({
-        date: getTodayStr(),
-        gameNumber,
-        clue,
-        guesses,
-        answers: newAnswers,
-        attemptsUsed,
-        questionsUsed: newQuestionsUsed,
-        finished,
-        solved,
-        revealedSong,
-      })
-
-      return res
-    } catch (err) {
-      console.error('[Sonadle] Error en pregunta:', err)
-      return null
-    }
-  }, [finished, questionsUsed, answers, gameNumber, clue, guesses, attemptsUsed, solved, revealedSong])
+  }, [finished, attemptsUsed, eliminated, progressiveClues, gameNumber, clue, options])
 
   return {
     loading,
     error,
     gameNumber,
     clue,
-    guesses,
-    answers,
+    options,
+    eliminated,
+    progressiveClues,
     attemptsUsed,
-    questionsUsed,
     maxAttempts: MAX_ATTEMPTS,
-    maxQuestions: MAX_QUESTIONS,
     finished,
     solved,
     revealedSong,
     attempt,
-    question,
   }
 }

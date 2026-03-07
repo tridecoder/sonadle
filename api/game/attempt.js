@@ -1,4 +1,4 @@
-import { getTodaySong } from '../_lib/songs.js'
+import { getTodaySong, getProgressiveClue } from '../_lib/songs.js'
 import { checkAnswer } from '../_lib/normalize.js'
 
 export default function handler(req, res) {
@@ -13,13 +13,13 @@ export default function handler(req, res) {
   }
 
   const attemptNum = parseInt(attempt_num, 10)
-  if (!attemptNum || attemptNum < 1 || attemptNum > 4) {
-    return res.status(400).json({ error: 'attempt_num debe estar entre 1 y 4' })
+  if (!attemptNum || attemptNum < 1 || attemptNum > 5) {
+    return res.status(400).json({ error: 'attempt_num debe estar entre 1 y 5' })
   }
 
   const { song, gameNumber } = getTodaySong()
   const isCorrect = checkAnswer(title, song.title)
-  const finished = isCorrect || attemptNum >= 4
+  const finished = isCorrect || attemptNum >= 5
 
   const response = {
     game_number: gameNumber,
@@ -28,6 +28,10 @@ export default function handler(req, res) {
     finished,
     solved: isCorrect,
     guess: title,
+  }
+
+  if (!isCorrect && !finished) {
+    response.progressive_clue = getProgressiveClue(song, attemptNum)
   }
 
   if (finished) {

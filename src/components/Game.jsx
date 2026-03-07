@@ -1,8 +1,6 @@
 import { useGame } from '../hooks/useGame'
-import JNSPClue from './JNSPClue'
-import Questions from './Questions'
-import GuessHistory from './GuessHistory'
-import Input from './Input'
+import ClueStack from './ClueStack'
+import OptionsList from './OptionsList'
 import AttemptsBar from './AttemptsBar'
 import Result from './Result'
 
@@ -12,26 +10,19 @@ export default function Game() {
     error,
     gameNumber,
     clue,
-    guesses,
-    answers,
+    options,
+    eliminated,
+    progressiveClues,
     attemptsUsed,
-    questionsUsed,
     maxAttempts,
-    maxQuestions,
     finished,
     solved,
     revealedSong,
     attempt,
-    question,
   } = useGame()
 
-  if (loading) {
-    return <div className="snd-loading">Cargando...</div>
-  }
-
-  if (error) {
-    return <div className="snd-loading">{error}</div>
-  }
+  if (loading) return <div className="snd-loading">Cargando...</div>
+  if (error)   return <div className="snd-loading">{error}</div>
 
   return (
     <>
@@ -42,48 +33,37 @@ export default function Game() {
         </div>
       </header>
 
-      <JNSPClue clue={clue} />
-
-      {!finished && (
-        <Questions
-          answers={answers}
-          questionsUsed={questionsUsed}
-          maxQuestions={maxQuestions}
-          onAsk={question}
-          disabled={finished}
-        />
-      )}
-
-      {finished && answers.length > 0 && (
-        <Questions
-          answers={answers}
-          questionsUsed={questionsUsed}
-          maxQuestions={maxQuestions}
-          onAsk={() => {}}
-          disabled={true}
-        />
-      )}
-
-      <GuessHistory guesses={guesses} />
+      <ClueStack clue={clue} progressiveClues={progressiveClues} />
 
       {!finished && (
         <>
-          <Input onSubmit={attempt} disabled={finished} />
+          <OptionsList
+            options={options}
+            eliminated={eliminated}
+            onSelect={attempt}
+            disabled={finished}
+          />
           <AttemptsBar used={attemptsUsed} max={maxAttempts} />
         </>
       )}
 
       {finished && (
-        <Result
-          solved={solved}
-          attemptsUsed={attemptsUsed}
-          questionsUsed={questionsUsed}
-          maxAttempts={maxAttempts}
-          gameNumber={gameNumber}
-          song={revealedSong}
-          guesses={guesses}
-          answers={answers}
-        />
+        <>
+          <OptionsList
+            options={options}
+            eliminated={eliminated}
+            onSelect={() => {}}
+            disabled={true}
+          />
+          <Result
+            solved={solved}
+            attemptsUsed={attemptsUsed}
+            maxAttempts={maxAttempts}
+            gameNumber={gameNumber}
+            song={revealedSong}
+            eliminated={eliminated}
+          />
+        </>
       )}
     </>
   )

@@ -209,3 +209,83 @@ sonadle.jenesaispop.com
 **Si quieres lo más propio de jenesaispop:** Propuesta 3 (Pista JNSP). Es la única que no puede copiar nadie más. El trabajo editorial es menor de lo que parece si se hace en bloque.
 
 **Combinación óptima:** Propuesta 3 como base (frase editorial como pista 1) + datos progresivos como en Propuesta 1/2. Lo editorial al frente, lo técnico como red de seguridad si no se acierta.
+
+---
+
+## RONDA 2 — Tres nuevas propuestas
+
+> Generadas tras descartar las anteriores mecánicas. Restricciones confirmadas: sin audio, sin letras literales (filtro de contenido).
+
+---
+
+## PROPUESTA 4: "Hangman Musical"
+
+### Cómo funciona
+
+El título de la canción aparece oculto como guiones: `_ _ _ _   _ _ _ _`
+
+El jugador propone letras del alfabeto una a una:
+- Si la letra está en el título, aparece en todas sus posiciones
+- Si no está, cuenta como fallo (máximo 6 fallos)
+
+Se muestra género + década desde el principio. Con cada fallo se va revelando una "penalización" visual (notas musicales que se agotan, como el muñeco del ahorcado pero con iconografía musical).
+
+### Por qué engancha
+
+Todo el mundo sabe jugar sin instrucciones. El placer de completar huecos es inmediato — mismo loop que el crucigrama o el Wordle. Cada letra correcta da una pequeña descarga de dopamina. Los títulos en español funcionan especialmente bien porque tienen letras características (ñ, acento, etc.).
+
+### Viabilidad
+
+Alta. Sin datos externos, sin letras, sin audio. Solo el título de la canción y lógica de letras.
+
+### Problema
+
+Los títulos de una sola palabra (SAOKO, Ceremony, A-Punk) son muy difíciles. Los muy largos dan demasiada info rápido. Habría que calibrar el catálogo.
+
+---
+
+## PROPUESTA 5: "Reducción" — Múltiple opción que se estrecha ✅ IMPLEMENTADA
+
+### Cómo funciona
+
+Empiezas viendo 6 canciones. Una es la correcta. Las otras 5 son distractores del mismo género o época.
+
+La pista principal es la frase JNSP (sin género ni década al inicio). Con cada fallo:
+1. Se elimina la opción equivocada
+2. Se revela una pista nueva (género → década → banda/solista → idioma)
+
+Máximo 5 fallos. Si fallas los 5, pierdes aunque te quede una opción.
+
+### Por qué engancha
+
+Elimina la frustración de "no me sale el nombre" — siempre puedes ver las opciones. El juego es leer la frase JNSP y razonar qué opción encaja. La tensión sube a medida que el tablero se reduce. Muy visual.
+
+### Viabilidad
+
+Alta. Todo con los datos ya existentes. Los distractores se seleccionan automáticamente por género/década desde el catálogo.
+
+---
+
+## PROPUESTA 6: "Conexión Oculta"
+
+### Cómo funciona
+
+Ves 3 canciones muy conocidas. Las tres comparten algo con la canción del día: mismo productor, mismo año, mismo sello, mismo festival, misma colaboración, misma temática...
+
+No se dice qué tienen en común. El jugador deduce:
+1. Primero adivina la CONEXIÓN (qué comparten las 3 con la oculta)
+2. Luego adivina la CANCIÓN
+
+El momento de revelar la conexión ("¡todas son del verano de 2022!") es el pico emocional del juego.
+
+### Por qué engancha
+
+El "aha!" es el más fuerte de todos los formatos probados. Premia conocimiento real y profundo de música. Muy compartible: "hoy eran todas producidas por el mismo tío, ¿lo sabías?". Encaja perfectamente con la voz editorial de jenesaispop.
+
+### Viabilidad
+
+Media. Requiere curar manualmente las 3 canciones de referencia y la conexión para cada día. No es automatizable. Pero puede prepararse en bloques semanales.
+
+### Recomendación de uso
+
+Mejor como modo semanal especial (viernes, por ejemplo) que como juego diario. La carga editorial es manejable si se hace una vez a la semana.

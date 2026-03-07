@@ -1,7 +1,5 @@
 /* Sonadle — Estilos */
 
-/* ── Reset minimo ─────────────────────────────────────────────────────────── */
-
 *, *::before, *::after {
   box-sizing: border-box;
   margin: 0;
@@ -13,8 +11,6 @@ body {
   color: #1a1a1a;
   -webkit-font-smoothing: antialiased;
 }
-
-/* ── Variables ────────────────────────────────────────────────────────────── */
 
 :root {
   --snd-color-bg:       #ffffff;
@@ -29,8 +25,6 @@ body {
   --snd-max-width:      560px;
 }
 
-/* ── Contenedor principal ─────────────────────────────────────────────────── */
-
 .snd-app {
   max-width: var(--snd-max-width);
   margin: 0 auto;
@@ -38,8 +32,6 @@ body {
   min-height: 100dvh;
   background: var(--snd-color-bg);
 }
-
-/* ── Loading ──────────────────────────────────────────────────────────────── */
 
 .snd-loading {
   text-align: center;
@@ -69,32 +61,17 @@ body {
   color: var(--snd-color-muted);
 }
 
-/* ── Badge ────────────────────────────────────────────────────────────────── */
+/* ── Pistas ───────────────────────────────────────────────────────────────── */
 
-.snd-badge {
-  display: inline-block;
-  padding: 0.25rem 0.65rem;
-  background: var(--snd-color-hint-bg);
-  border: 1px solid var(--snd-color-border);
-  border-radius: 999px;
-  font-size: 0.8rem;
-  font-weight: 600;
-}
-
-/* ── Pista JNSP ───────────────────────────────────────────────────────────── */
-
-.snd-jnsp-clue {
+.snd-clue-stack {
   margin-bottom: 1.5rem;
-}
-
-.snd-jnsp-clue__badges {
   display: flex;
+  flex-direction: column;
   gap: 0.5rem;
-  margin-bottom: 0.75rem;
 }
 
 .snd-jnsp-clue__quote {
-  font-size: 1.2rem;
+  font-size: 1.15rem;
   font-style: italic;
   line-height: 1.5;
   color: var(--snd-color-text);
@@ -104,207 +81,78 @@ body {
   border-radius: 0 var(--snd-radius) var(--snd-radius) 0;
 }
 
-/* ── Preguntas ────────────────────────────────────────────────────────────── */
-
-.snd-questions {
-  margin-bottom: 1.5rem;
-}
-
-.snd-questions__header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 0.5rem;
-}
-
-.snd-questions__title {
-  font-size: 0.7rem;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  font-weight: 700;
-  color: var(--snd-color-muted);
-}
-
-.snd-questions__remaining {
-  font-size: 0.75rem;
-  color: var(--snd-color-muted);
-}
-
-.snd-questions__list {
-  display: flex;
-  flex-direction: column;
-  gap: 0.4rem;
-}
-
-.snd-question {
+.snd-progressive-clue {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  padding: 0.55rem 0.85rem;
+  gap: 0.5rem;
+  padding: 0.45rem 0.85rem;
+  background: #fff8f0;
+  border: 1px solid #fde68a;
   border-radius: var(--snd-radius);
   font-size: 0.875rem;
-  font-family: inherit;
-  text-align: left;
-  transition: background 0.15s;
+  animation: snd-clue-in 0.3s ease;
 }
 
-.snd-question--available {
-  background: var(--snd-color-hint-bg);
-  border: 1px solid var(--snd-color-border);
-  cursor: pointer;
-  color: var(--snd-color-text);
-  font-weight: 500;
-}
-
-.snd-question--available:hover:not(:disabled) {
-  background: #ebebeb;
-}
-
-.snd-question--available:disabled {
-  opacity: 0.4;
-  cursor: not-allowed;
-}
-
-.snd-question--answered {
-  border: 1px solid transparent;
-}
-
-.snd-question--yes {
-  background: #f0fdf4;
-  border-color: #bbf7d0;
-}
-
-.snd-question--no {
-  background: #fef2f2;
-  border-color: #fecaca;
-}
-
-.snd-question__label {
-  color: var(--snd-color-muted);
-}
-
-.snd-question__answer {
-  font-weight: 700;
-  font-size: 0.85rem;
-}
-
-.snd-question--yes .snd-question__answer {
-  color: #16a34a;
-}
-
-.snd-question--no .snd-question__answer {
-  color: #dc2626;
-}
-
-/* ── Historial de intentos ────────────────────────────────────────────────── */
-
-.snd-guess-history {
-  display: flex;
-  flex-direction: column;
-  gap: 0.4rem;
-  margin-bottom: 1rem;
-}
-
-.snd-guess {
-  display: flex;
-  align-items: center;
-  gap: 0.6rem;
-  padding: 0.55rem 0.85rem;
-  border-radius: var(--snd-radius);
-  font-size: 0.9rem;
-  animation: snd-guess-in 0.25s ease;
-}
-
-.snd-guess--wrong {
-  background: var(--snd-color-hint-bg);
-  border: 1px solid var(--snd-color-border);
-}
-
-.snd-guess--correct {
-  background: #f0fdf4;
-  border: 1px solid #bbf7d0;
-}
-
-.snd-guess__icon {
-  font-size: 1rem;
-  flex-shrink: 0;
-}
-
-.snd-guess__title {
-  font-weight: 500;
-}
-
-@keyframes snd-guess-in {
+@keyframes snd-clue-in {
   from { opacity: 0; transform: translateY(-4px); }
   to   { opacity: 1; transform: translateY(0); }
 }
 
-/* ── Campo de respuesta ───────────────────────────────────────────────────── */
+.snd-progressive-clue__label {
+  font-weight: 700;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #92400e;
+}
 
-.snd-input-area {
+.snd-progressive-clue__value {
+  color: var(--snd-color-text);
+}
+
+/* ── Opciones ─────────────────────────────────────────────────────────────── */
+
+.snd-options {
   display: flex;
+  flex-direction: column;
   gap: 0.5rem;
   margin-bottom: 1rem;
-  position: relative;
 }
 
-.snd-autocomplete {
-  flex: 1;
-  position: relative;
-}
-
-.snd-input {
-  width: 100%;
-  padding: 0.75rem 1rem;
-  border: 2px solid var(--snd-color-border);
-  border-radius: var(--snd-radius);
-  font-size: 1rem;
-  font-family: inherit;
-  outline: none;
-  transition: border-color 0.15s;
-  background: var(--snd-color-bg);
-}
-
-.snd-input:focus {
-  border-color: var(--snd-color-primary);
-}
-
-.snd-suggestions {
-  position: absolute;
-  top: calc(100% + 4px);
-  left: 0;
-  right: 0;
-  background: white;
-  border: 1px solid var(--snd-color-border);
-  border-radius: var(--snd-radius);
-  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-  list-style: none;
-  margin: 0;
-  padding: 0.25rem 0;
-  z-index: 100;
-  max-height: 240px;
-  overflow-y: auto;
-}
-
-.snd-suggestion {
-  padding: 0.6rem 1rem;
-  cursor: pointer;
+.snd-option {
   display: flex;
   flex-direction: column;
   gap: 0.1rem;
+  padding: 0.75rem 1rem;
+  background: var(--snd-color-hint-bg);
+  border: 2px solid var(--snd-color-border);
+  border-radius: var(--snd-radius);
+  cursor: pointer;
+  text-align: left;
+  font-family: inherit;
+  transition: border-color 0.15s, background 0.15s, opacity 0.2s;
 }
 
-.snd-suggestion strong {
-  font-size: 0.9rem;
+.snd-option:hover:not(:disabled):not(.snd-option--eliminated) {
+  border-color: var(--snd-color-primary);
+  background: white;
 }
 
-.snd-suggestion span {
+.snd-option--eliminated {
+  opacity: 0.35;
+  cursor: not-allowed;
+  text-decoration: line-through;
+}
+
+.snd-option__title {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--snd-color-text);
+}
+
+.snd-option__artist {
   font-size: 0.8rem;
   color: var(--snd-color-muted);
-}
-
-.snd-suggestion:hover {
-  background: var(--snd-color-hint-bg);
 }
 
 /* ── Barra de intentos ────────────────────────────────────────────────────── */
@@ -340,23 +188,12 @@ body {
   font-family: inherit;
   font-weight: 600;
   cursor: pointer;
-  text-decoration: none;
   transition: opacity 0.15s;
 }
 
 .snd-btn:disabled {
   opacity: 0.5;
   cursor: not-allowed;
-}
-
-.snd-btn--primary {
-  background: var(--snd-color-primary);
-  color: white;
-  white-space: nowrap;
-}
-
-.snd-btn--primary:hover:not(:disabled) {
-  opacity: 0.85;
 }
 
 .snd-btn--share {
@@ -423,21 +260,4 @@ body {
   font-size: 0.875rem;
   color: var(--snd-color-muted);
   margin-top: 1rem;
-}
-
-/* ── Animaciones ──────────────────────────────────────────────────────────── */
-
-@keyframes snd-shake {
-  0%, 100% { transform: translateX(0); }
-  20%      { transform: translateX(-6px); }
-  60%      { transform: translateX(6px); }
-  80%      { transform: translateX(-3px); }
-}
-
-.snd-shake {
-  animation: snd-shake 0.4s ease;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .snd-guess, .snd-shake { animation: none; }
 }
