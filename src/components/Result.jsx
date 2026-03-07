@@ -1,4 +1,38 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
+
+function AppleMusicWidget({ title, artist }) {
+  const [embedUrl, setEmbedUrl] = useState(null)
+  const fetched = useRef(false)
+
+  useEffect(() => {
+    if (!title || !artist || fetched.current) return
+    fetched.current = true
+    const q = encodeURIComponent(`${artist} ${title}`)
+    fetch(`https://itunes.apple.com/search?term=${q}&media=music&entity=song&limit=1&country=es`)
+      .then(r => r.json())
+      .then(data => {
+        const track = data.results?.[0]
+        if (track?.trackViewUrl) {
+          setEmbedUrl(track.trackViewUrl.replace('music.apple.com', 'embed.music.apple.com'))
+        }
+      })
+      .catch(() => {})
+  }, [title, artist])
+
+  if (!embedUrl) return null
+
+  return (
+    <div className="snd-apple-widget">
+      <iframe
+        src={embedUrl}
+        height="175"
+        allow="autoplay *; encrypted-media *; fullscreen *; clipboard-write"
+        frameBorder="0"
+        sandbox="allow-forms allow-popups allow-same-origin allow-scripts allow-storage-access-by-user-activation allow-top-navigation-by-user-activation"
+      />
+    </div>
+  )
+}
 
 function Countdown() {
   const [text, setText] = useState('')
@@ -51,6 +85,8 @@ export default function Result({ solved, wrongCount, maxWrong, gameNumber, song,
           {song.album && <div className="snd-result__song-album">{song.album}</div>}
         </div>
       )}
+
+      {song && <AppleMusicWidget title={song.title} artist={song.artist} />}
 
       {solved ? (
         <div className="snd-result__score-block">

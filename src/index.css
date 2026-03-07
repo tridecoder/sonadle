@@ -254,6 +254,12 @@ body {
   margin-top: 0.5rem;
 }
 
+.snd-apple-widget iframe {
+  width: 100%;
+  border-radius: 12px;
+  display: block;
+}
+
 .snd-result__no-score {
   font-size: 1rem;
   color: var(--snd-muted);
