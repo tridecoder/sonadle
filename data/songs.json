@@ -15,19 +15,19 @@
     "difficulty": 2
   },
   {
-    "title": "Tú Me Dejaste De Querer",
-    "artist": "C. Tangana",
-    "album": "El Madrileño",
-    "year": 2021,
-    "genre": "Pop",
-    "is_band": false,
+    "title": "Sprawl II (Mountains Beyond Mountains)",
+    "artist": "Arcade Fire",
+    "album": "The Suburbs",
+    "year": 2010,
+    "genre": "Indie",
+    "is_band": true,
     "is_female": false,
-    "language": "es",
-    "jnsp_clue": "La que con La Húngara convirtió el flamenco en algo que el indie también podía escuchar sin complejos",
-    "keywords": "El Madrileño, flamenco urbano, La Húngara",
-    "lyric_hint": "Tú me dejaste de querer cuando te necesitaba\nCuando más falta hacía, tú me diste la espalda",
+    "language": "en",
+    "jnsp_clue": "La del suburbio que Régine convierte en himno de fuga con un synth que te empuja hacia adelante",
+    "keywords": "The Suburbs, synth-pop, Régine canta",
+    "lyric_hint": "They heard me singing and they told me to stop\nQuit these pretentious things and just punch the clock",
     "cover_url": "",
-    "difficulty": 2
+    "difficulty": 3
   },
   {
     "title": "SAOKO",
@@ -135,19 +135,19 @@
     "difficulty": 4
   },
   {
-    "title": "Sprawl II (Mountains Beyond Mountains)",
-    "artist": "Arcade Fire",
-    "album": "The Suburbs",
-    "year": 2010,
-    "genre": "Indie",
-    "is_band": true,
+    "title": "Tú Me Dejaste De Querer",
+    "artist": "C. Tangana",
+    "album": "El Madrileño",
+    "year": 2021,
+    "genre": "Pop",
+    "is_band": false,
     "is_female": false,
-    "language": "en",
-    "jnsp_clue": "La del suburbio que Régine convierte en himno de fuga con un synth que te empuja hacia adelante",
-    "keywords": "The Suburbs, synth-pop, Régine canta",
-    "lyric_hint": "They heard me singing and they told me to stop\nQuit these pretentious things and just punch the clock",
+    "language": "es",
+    "jnsp_clue": "La que con La Húngara convirtió el flamenco en algo que el indie también podía escuchar sin complejos",
+    "keywords": "El Madrileño, flamenco urbano, La Húngara",
+    "lyric_hint": "Tú me dejaste de querer cuando te necesitaba\nCuando más falta hacía, tú me diste la espalda",
     "cover_url": "",
-    "difficulty": 3
+    "difficulty": 2
   },
   {
     "title": "Kill Bill",

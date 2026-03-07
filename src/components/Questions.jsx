@@ -3,7 +3,7 @@ const QUESTIONS = [
   { key: 'is_band',      label: '¿Es una banda?' },
   { key: 'is_female',    label: '¿Artista mujer?' },
   { key: 'in_spanish',   label: '¿Está en español?' },
-  { key: 'before_2000',  label: '¿Es de antes del 2000?' },
+  { key: 'title_single', label: '¿Tiene una sola palabra en el título?' },
 ]
 
 export default function Questions({ answers, questionsUsed, maxQuestions, onAsk, disabled }) {
