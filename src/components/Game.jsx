@@ -1,7 +1,8 @@
 import { useGame } from '../hooks/useGame'
 import ClueStack from './ClueStack'
-import OptionsList from './OptionsList'
-import AttemptsBar from './AttemptsBar'
+import TitleDisplay from './TitleDisplay'
+import Lives from './Lives'
+import Keyboard from './Keyboard'
 import Result from './Result'
 
 export default function Game() {
@@ -10,15 +11,16 @@ export default function Game() {
     error,
     gameNumber,
     clue,
-    options,
-    eliminated,
+    titleDisplay,
+    revealedPositions,
+    usedLetters,
+    wrongCount,
+    maxWrong,
     progressiveClues,
-    attemptsUsed,
-    maxAttempts,
     finished,
     solved,
     revealedSong,
-    attempt,
+    guess,
   } = useGame()
 
   if (loading) return <div className="snd-loading">Cargando...</div>
@@ -35,35 +37,23 @@ export default function Game() {
 
       <ClueStack clue={clue} progressiveClues={progressiveClues} />
 
+      <TitleDisplay titleDisplay={titleDisplay} revealedPositions={revealedPositions} />
+
+      <Lives wrongCount={wrongCount} maxWrong={maxWrong} />
+
       {!finished && (
-        <>
-          <OptionsList
-            options={options}
-            eliminated={eliminated}
-            onSelect={attempt}
-            disabled={finished}
-          />
-          <AttemptsBar used={attemptsUsed} max={maxAttempts} />
-        </>
+        <Keyboard usedLetters={usedLetters} onGuess={guess} disabled={finished} />
       )}
 
       {finished && (
-        <>
-          <OptionsList
-            options={options}
-            eliminated={eliminated}
-            onSelect={() => {}}
-            disabled={true}
-          />
-          <Result
-            solved={solved}
-            attemptsUsed={attemptsUsed}
-            maxAttempts={maxAttempts}
-            gameNumber={gameNumber}
-            song={revealedSong}
-            eliminated={eliminated}
-          />
-        </>
+        <Result
+          solved={solved}
+          wrongCount={wrongCount}
+          maxWrong={maxWrong}
+          gameNumber={gameNumber}
+          song={revealedSong}
+          usedLetters={usedLetters}
+        />
       )}
     </>
   )

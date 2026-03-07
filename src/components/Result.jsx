@@ -2,7 +2,6 @@ import { useState, useEffect } from 'react'
 
 function Countdown() {
   const [text, setText] = useState('')
-
   useEffect(() => {
     function update() {
       const now = new Date()
@@ -18,22 +17,17 @@ function Countdown() {
     const id = setInterval(update, 1000)
     return () => clearInterval(id)
   }, [])
-
   return <div className="snd-result__countdown">{text}</div>
 }
 
-export default function Result({ solved, attemptsUsed, maxAttempts, gameNumber, song, eliminated }) {
+export default function Result({ solved, wrongCount, maxWrong, gameNumber, song, usedLetters }) {
   const [copied, setCopied] = useState(false)
 
   function share() {
-    const squares = Array.from({ length: maxAttempts }, (_, i) => {
-      if (i < eliminated.length) return '🟥'
-      if (i === eliminated.length && solved) return '🟩'
-      return '⬜'
-    }).join('')
-
-    const text = `Sonadle #${gameNumber} — ${solved ? attemptsUsed : 'X'}/${maxAttempts}\n${squares}\nsonadle.jenesaispop.com`
-
+    const correct = Object.values(usedLetters).filter(v => v === 'correct').length
+    const wrong = wrongCount
+    const squares = Array.from({ length: maxWrong }, (_, i) => i < wrong ? '🟥' : '⬜').join('')
+    const text = `Sonadle #${gameNumber} — ${solved ? `${wrong} fallos` : 'sin resolver'}\n${squares}\nsonadle.jenesaispop.com`
     navigator.clipboard.writeText(text).then(() => {
       setCopied(true)
       setTimeout(() => setCopied(false), 2000)
@@ -55,10 +49,7 @@ export default function Result({ solved, attemptsUsed, maxAttempts, gameNumber, 
       )}
 
       <div className="snd-result__stats">
-        {solved
-          ? `En ${attemptsUsed} intento${attemptsUsed === 1 ? '' : 's'}`
-          : 'Sin puntos hoy'
-        }
+        {solved ? `${wrongCount} fallo${wrongCount === 1 ? '' : 's'}` : 'Sin puntos hoy'}
       </div>
 
       <div className="snd-result__share">

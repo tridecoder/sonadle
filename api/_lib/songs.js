@@ -28,64 +28,72 @@ export function getTodaySong() {
   const songIndex = ((dayIndex % songs.length) + songs.length) % songs.length
   const gameNumber = dayIndex + 1
 
-  return { song: songs[songIndex], gameNumber, allSongs: songs }
+  return { song: songs[songIndex], gameNumber }
 }
 
 /**
- * Shuffle determinista seeded por un numero.
+ * Normaliza un caracter a su letra base sin acento.
  */
-function seededShuffle(arr, seed) {
-  const result = [...arr]
-  let s = Math.abs(seed) || 1
-  for (let i = result.length - 1; i > 0; i--) {
-    s = (s * 1664525 + 1013904223) & 0x7fffffff
-    const j = s % (i + 1)
-    ;[result[i], result[j]] = [result[j], result[i]]
-  }
-  return result
+function normalizeChar(c) {
+  return c.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '')
 }
 
 /**
- * Devuelve 6 opciones: la cancion correcta + 5 distractores.
- * Prioriza mismo genero, luego misma decada, luego resto.
- * El orden esta determinado por gameNumber para que sea igual para todos.
+ * Quita contenido entre parentesis del titulo.
  */
-export function getOptions(song, allSongs, gameNumber) {
-  const decade = Math.floor(song.year / 10) * 10
-  const others = allSongs.filter(s => s.title !== song.title)
-
-  const sameGenre = others.filter(s => s.genre === song.genre)
-  const sameDecade = others.filter(s => s.genre !== song.genre && Math.floor(s.year / 10) * 10 === decade)
-  const rest = others.filter(s => s.genre !== song.genre && Math.floor(s.year / 10) * 10 !== decade)
-
-  const shuffledGenre = seededShuffle(sameGenre, gameNumber)
-  const shuffledDecade = seededShuffle(sameDecade, gameNumber + 1)
-  const shuffledRest = seededShuffle(rest, gameNumber + 2)
-
-  const distractors = [...shuffledGenre, ...shuffledDecade, ...shuffledRest].slice(0, 5)
-  const all6 = seededShuffle([song, ...distractors], gameNumber + 3)
-
-  return all6.map(s => ({ title: s.title, artist: s.artist }))
+function cleanTitle(title) {
+  return title.replace(/\s*\(.*?\)/g, '').trim()
 }
 
 /**
- * Devuelve la pista inicial: solo la frase JNSP.
+ * Devuelve el titulo limpio para el hangman.
+ */
+export function getHangmanTitle(song) {
+  return cleanTitle(song.title)
+}
+
+/**
+ * Devuelve la estructura de display del titulo:
+ * array donde cada elemento es ' ' (espacio), el char original (si no es letra),
+ * o '_' (letra a adivinar).
+ */
+export function getTitleDisplay(song) {
+  return getHangmanTitle(song).split('').map(c => {
+    if (c === ' ') return ' '
+    if (/\p{L}/u.test(c)) return '_'
+    return c
+  })
+}
+
+/**
+ * Devuelve los indices en el titulo donde aparece la letra dada
+ * (comparacion sin acento, case insensitive).
+ */
+export function checkLetter(song, letter) {
+  const normalizedInput = normalizeChar(letter)
+  const title = getHangmanTitle(song)
+  const positions = []
+  title.split('').forEach((c, i) => {
+    if (/\p{L}/u.test(c) && normalizeChar(c) === normalizedInput) {
+      positions.push(i)
+    }
+  })
+  return positions
+}
+
+/**
+ * Pista progresiva segun numero de fallos acumulados.
+ */
+export function getHangmanClue(song, wrongCount) {
+  const decade = Math.floor(song.year / 10) * 10 + 's'
+  if (wrongCount === 2) return { label: 'Género', value: song.genre }
+  if (wrongCount === 4) return { label: 'Década', value: decade }
+  return null
+}
+
+/**
+ * Devuelve la pista JNSP para mostrar al inicio.
  */
 export function getGameClue(song) {
   return { jnsp: song.jnsp_clue }
-}
-
-/**
- * Pista progresiva revelada tras cada fallo.
- * attemptNum: 1..4
- */
-export function getProgressiveClue(song, attemptNum) {
-  const decade = Math.floor(song.year / 10) * 10 + 's'
-  switch (attemptNum) {
-    case 1: return { type: 'genre',    label: 'Género',  value: song.genre }
-    case 2: return { type: 'decade',   label: 'Década',  value: decade }
-    case 3: return { type: 'band',     label: song.is_band ? 'Banda' : 'Solista', value: song.is_band ? 'Es una banda' : 'Es un/a solista' }
-    case 4: return { type: 'language', label: 'Idioma',  value: song.language === 'es' ? 'Está en español' : 'Está en inglés' }
-    default: return null
-  }
 }

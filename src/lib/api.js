@@ -6,11 +6,11 @@ export async function fetchToday() {
   return res.json()
 }
 
-export async function submitAttempt(title, attemptNum) {
-  const res = await fetch(`${BASE}/game/attempt`, {
+export async function guessLetter(letter, wrongCount, finished = false) {
+  const res = await fetch(`${BASE}/game/letter`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ title, attempt_num: attemptNum }),
+    body: JSON.stringify({ letter, wrong_count: wrongCount, finished }),
   })
   if (!res.ok) throw new Error(`Error ${res.status}`)
   return res.json()

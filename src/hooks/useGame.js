@@ -1,8 +1,8 @@
 import { useState, useEffect, useCallback } from 'react'
-import { fetchToday, submitAttempt } from '../lib/api'
+import { fetchToday, guessLetter } from '../lib/api'
 
-const STORAGE_KEY = 'sonadle_v32'
-const MAX_ATTEMPTS = 5
+const STORAGE_KEY = 'sonadle_v33'
+const MAX_WRONG = 6
 
 function getTodayStr() {
   return new Date().toLocaleDateString('en-CA', { timeZone: 'Europe/Madrid' })
@@ -24,14 +24,25 @@ function saveState(state) {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(state))
 }
 
+/**
+ * Comprueba si todas las letras del titulo han sido adivinadas.
+ * titleDisplay: array de chars (' ', '_', o char especial)
+ * revealedPositions: { letter: [indices] }
+ */
+function checkSolved(titleDisplay, revealedPositions) {
+  const allRevealed = new Set(Object.values(revealedPositions).flat())
+  return titleDisplay.every((c, i) => c !== '_' || allRevealed.has(i))
+}
+
 export function useGame() {
   const [loading, setLoading] = useState(true)
   const [gameNumber, setGameNumber] = useState(null)
   const [clue, setClue] = useState(null)
-  const [options, setOptions] = useState([])           // [{ title, artist }] — orden fijo todo el día
-  const [eliminated, setEliminated] = useState([])    // títulos eliminados
-  const [progressiveClues, setProgressiveClues] = useState([])  // pistas reveladas tras cada fallo
-  const [attemptsUsed, setAttemptsUsed] = useState(0)
+  const [titleDisplay, setTitleDisplay] = useState([])
+  const [revealedPositions, setRevealedPositions] = useState({}) // { 'a': [0, 4, 7] }
+  const [usedLetters, setUsedLetters] = useState({})             // { 'a': 'correct'|'wrong' }
+  const [wrongCount, setWrongCount] = useState(0)
+  const [progressiveClues, setProgressiveClues] = useState([])
   const [finished, setFinished] = useState(false)
   const [solved, setSolved] = useState(false)
   const [revealedSong, setRevealedSong] = useState(null)
@@ -44,10 +55,11 @@ export function useGame() {
       if (saved) {
         setGameNumber(saved.gameNumber)
         setClue(saved.clue)
-        setOptions(saved.options)
-        setEliminated(saved.eliminated || [])
+        setTitleDisplay(saved.titleDisplay)
+        setRevealedPositions(saved.revealedPositions || {})
+        setUsedLetters(saved.usedLetters || {})
+        setWrongCount(saved.wrongCount || 0)
         setProgressiveClues(saved.progressiveClues || [])
-        setAttemptsUsed(saved.attemptsUsed)
         setFinished(saved.finished)
         setSolved(saved.solved)
         if (saved.revealedSong) setRevealedSong(saved.revealedSong)
@@ -59,15 +71,16 @@ export function useGame() {
         const data = await fetchToday()
         setGameNumber(data.game_number)
         setClue(data.clue)
-        setOptions(data.options)
+        setTitleDisplay(data.title_display)
         saveState({
           date: getTodayStr(),
           gameNumber: data.game_number,
           clue: data.clue,
-          options: data.options,
-          eliminated: [],
+          titleDisplay: data.title_display,
+          revealedPositions: {},
+          usedLetters: {},
+          wrongCount: 0,
           progressiveClues: [],
-          attemptsUsed: 0,
           finished: false,
           solved: false,
           revealedSong: null,
@@ -83,61 +96,75 @@ export function useGame() {
     init()
   }, [])
 
-  const attempt = useCallback(async (title) => {
-    if (finished || attemptsUsed >= MAX_ATTEMPTS) return null
+  const guess = useCallback(async (letter) => {
+    if (finished || usedLetters[letter]) return
 
-    const nextAttempt = attemptsUsed + 1
+    const isLastWrong = !titleDisplay.includes('_') // shouldn't happen but guard
+    const wouldFinish = wrongCount + 1 >= MAX_WRONG
 
     try {
-      const res = await submitAttempt(title, nextAttempt)
+      const res = await guessLetter(letter, wrongCount, false)
 
-      const newEliminated = res.is_correct ? eliminated : [...eliminated, title]
+      const newRevealedPositions = res.correct
+        ? { ...revealedPositions, [letter]: res.positions }
+        : revealedPositions
+
+      const newUsedLetters = { ...usedLetters, [letter]: res.correct ? 'correct' : 'wrong' }
+      const newWrongCount = res.wrong_count
       const newProgressiveClues = res.progressive_clue
         ? [...progressiveClues, res.progressive_clue]
         : progressiveClues
-      const revealed = res.revealed || null
 
-      setEliminated(newEliminated)
+      const nowSolved = res.correct && checkSolved(titleDisplay, newRevealedPositions)
+      const nowFinished = nowSolved || newWrongCount >= MAX_WRONG
+
+      let revealed = null
+      if (nowFinished) {
+        // Pedir reveal al servidor
+        const finalRes = await guessLetter(letter, res.wrong_count, true)
+        revealed = finalRes.revealed || null
+      }
+
+      setRevealedPositions(newRevealedPositions)
+      setUsedLetters(newUsedLetters)
+      setWrongCount(newWrongCount)
       setProgressiveClues(newProgressiveClues)
-      setAttemptsUsed(res.attempt_num)
-      setFinished(res.finished)
-      setSolved(res.solved)
+      setFinished(nowFinished)
+      setSolved(nowSolved)
       if (revealed) setRevealedSong(revealed)
 
       saveState({
         date: getTodayStr(),
         gameNumber,
         clue,
-        options,
-        eliminated: newEliminated,
+        titleDisplay,
+        revealedPositions: newRevealedPositions,
+        usedLetters: newUsedLetters,
+        wrongCount: newWrongCount,
         progressiveClues: newProgressiveClues,
-        attemptsUsed: res.attempt_num,
-        finished: res.finished,
-        solved: res.solved,
+        finished: nowFinished,
+        solved: nowSolved,
         revealedSong: revealed,
       })
-
-      return res
     } catch (err) {
-      console.error('[Sonadle] Error en intento:', err)
-      setError('Error al enviar la respuesta')
-      return null
+      console.error('[Sonadle] Error al adivinar letra:', err)
     }
-  }, [finished, attemptsUsed, eliminated, progressiveClues, gameNumber, clue, options])
+  }, [finished, usedLetters, wrongCount, revealedPositions, progressiveClues, titleDisplay, gameNumber, clue])
 
   return {
     loading,
     error,
     gameNumber,
     clue,
-    options,
-    eliminated,
+    titleDisplay,
+    revealedPositions,
+    usedLetters,
+    wrongCount,
+    maxWrong: MAX_WRONG,
     progressiveClues,
-    attemptsUsed,
-    maxAttempts: MAX_ATTEMPTS,
     finished,
     solved,
     revealedSong,
-    attempt,
+    guess,
   }
 }
