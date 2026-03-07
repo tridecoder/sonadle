@@ -37,12 +37,24 @@ export function getTodaySong() {
 }
 
 /**
+ * Devuelve las iniciales del titulo (sin parentesis).
+ * Ej: "Running Up That Hill (A Deal with God)" → "R.U.T.H."
+ */
+function getInitials(title) {
+  const clean = title.replace(/\(.*?\)/g, '').trim()
+  return clean
+    .split(/\s+/)
+    .map(w => w[0].toUpperCase())
+    .join('.')
+}
+
+/**
  * Devuelve las pistas desbloqueadas segun el numero de intentos usados.
- * Pista 1: siempre visible (emojis — no googleable)
+ * Pista 1: siempre visible (iniciales del titulo)
  * Pista 2: tras intento 1 (año)
  * Pista 3: tras intento 2 (género)
- * Pista 4: tras intento 3 (portada pixelada)
- * Pista 5: tras intento 4 (artista)
+ * Pista 4: tras intento 3 (artista)
+ * Pista 5: tras intento 4 (emojis)
  * Pista 6: tras intento 5 (fragmento de letra)
  */
 export function getHints(song, attemptsUsed) {
@@ -59,15 +71,15 @@ export function getHints(song, attemptsUsed) {
 function getHint(song, number) {
   switch (number) {
     case 1:
-      return { type: 'emoji', value: song.emoji_hint }
+      return { type: 'initials', value: getInitials(song.title) }
     case 2:
       return { type: 'year', value: song.year }
     case 3:
       return { type: 'genre', value: song.genre }
     case 4:
-      return { type: 'cover_pixel', value: song.cover_url || null }
-    case 5:
       return { type: 'artist', value: song.artist }
+    case 5:
+      return { type: 'emoji', value: song.emoji_hint }
     case 6:
       return { type: 'lyric', value: song.lyric_hint }
     default:

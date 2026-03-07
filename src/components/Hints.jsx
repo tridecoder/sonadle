@@ -1,5 +1,13 @@
 function HintCard({ hint }) {
   switch (hint.type) {
+    case 'initials':
+      return (
+        <div className="snd-hint snd-hint--initials">
+          <span className="snd-hint__label">Iniciales del título</span>
+          <span className="snd-hint__value snd-hint__value--big">{hint.value}</span>
+        </div>
+      )
+
     case 'emoji':
       return (
         <div className="snd-hint snd-hint--emoji">
@@ -37,24 +45,6 @@ function HintCard({ hint }) {
         <div className="snd-hint snd-hint--artist">
           <span className="snd-hint__label">Artista</span>
           <span className="snd-hint__value">{hint.value}</span>
-        </div>
-      )
-
-    case 'cover_pixel':
-      if (!hint.value) return null
-      return (
-        <div className="snd-hint snd-hint--cover">
-          <span className="snd-hint__label">Portada</span>
-          <img className="snd-cover snd-cover--pixel" src={hint.value} alt="Portada pixelada" />
-        </div>
-      )
-
-    case 'cover_medium':
-      if (!hint.value) return null
-      return (
-        <div className="snd-hint snd-hint--cover">
-          <span className="snd-hint__label">Portada</span>
-          <img className="snd-cover snd-cover--medium" src={hint.value} alt="Portada" />
         </div>
       )
 
