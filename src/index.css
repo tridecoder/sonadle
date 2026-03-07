@@ -342,8 +342,27 @@ body {
 }
 
 .snd-result__song {
-  margin-bottom: 0.5rem;
-  font-size: 1rem;
+  margin-bottom: 1rem;
+}
+
+.snd-result__title {
+  font-size: 1.5rem;
+  font-weight: 800;
+  line-height: 1.2;
+  margin-bottom: 0.25rem;
+}
+
+.snd-result__artist {
+  font-size: 1.1rem;
+  color: var(--snd-color-primary);
+  font-weight: 600;
+}
+
+.snd-result__album {
+  font-size: 0.85rem;
+  color: var(--snd-color-muted);
+  font-style: italic;
+  margin-top: 0.15rem;
 }
 
 .snd-result__stats {

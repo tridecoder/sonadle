@@ -46,7 +46,9 @@ export default function Result({ solved, attemptsUsed, maxAttempts, gameNumber, 
 
       {song && (
         <div className="snd-result__song">
-          <strong>{song.title}</strong> — {song.artist}
+          <div className="snd-result__title">{song.title}</div>
+          <div className="snd-result__artist">{song.artist}</div>
+          {song.album && <div className="snd-result__album">{song.album}</div>}
         </div>
       )}
 
