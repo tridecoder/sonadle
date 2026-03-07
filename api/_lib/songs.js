@@ -37,15 +37,15 @@ export function getTodaySong() {
 }
 
 /**
- * Devuelve las iniciales del titulo (sin parentesis).
- * Ej: "Running Up That Hill (A Deal with God)" → "R.U.T.H."
+ * Devuelve el titulo con solo la primera letra de cada palabra visible.
+ * Ej: "Running Up That Hill" → "R______ U_ T___ H___"
  */
 function getInitials(title) {
   const clean = title.replace(/\(.*?\)/g, '').trim()
   return clean
     .split(/\s+/)
-    .map(w => w[0].toUpperCase())
-    .join('.')
+    .map(w => w[0] + '_'.repeat(w.length - 1))
+    .join(' ')
 }
 
 /**

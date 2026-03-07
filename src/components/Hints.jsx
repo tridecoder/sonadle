@@ -3,8 +3,8 @@ function HintCard({ hint }) {
     case 'initials':
       return (
         <div className="snd-hint snd-hint--initials">
-          <span className="snd-hint__label">Iniciales del título</span>
-          <span className="snd-hint__value snd-hint__value--big">{hint.value}</span>
+          <span className="snd-hint__label">Título</span>
+          <span className="snd-hint__value snd-hint__value--initials">{hint.value}</span>
         </div>
       )
 

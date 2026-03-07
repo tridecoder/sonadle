@@ -122,6 +122,14 @@ body {
   line-height: 1.4;
 }
 
+.snd-hint__value--initials {
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 1.5rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  line-height: 1.4;
+}
+
 .snd-hint__tag {
   display: inline-block;
   padding: 0.25rem 0.75rem;
