@@ -16,9 +16,13 @@ function AppleMusicWidget({ title, artist }) {
       .then(r => r.json())
       .then(data => {
         const expectedArtist = normalize(artist)
+        const expectedTitle = normalize(title)
         const track = data.results?.find(t => {
           const resultArtist = normalize(t.artistName || '')
-          return resultArtist.includes(expectedArtist) || expectedArtist.includes(resultArtist)
+          const resultTitle = normalize(t.trackName || '')
+          const artistMatch = resultArtist.includes(expectedArtist) || expectedArtist.includes(resultArtist)
+          const titleMatch = resultTitle.includes(expectedTitle) || expectedTitle.includes(resultTitle)
+          return artistMatch && titleMatch
         })
         if (track?.trackViewUrl) {
           setEmbedUrl(track.trackViewUrl.replace('music.apple.com', 'embed.music.apple.com'))
