@@ -122,11 +122,21 @@ body {
   line-height: 1.4;
 }
 
+.snd-hint__value--decade {
+  font-size: 0.85rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--snd-color-muted);
+  margin-bottom: 0.5rem;
+}
+
 .snd-hint__value--keywords {
   font-size: 1.25rem;
   font-weight: 600;
   font-style: italic;
   line-height: 1.4;
+  margin-bottom: 0.75rem;
 }
 
 .snd-hint__value--structure {

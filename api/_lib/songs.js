@@ -86,6 +86,7 @@ function getHint(song, number) {
       return {
         type: 'clue',
         value: {
+          decade: Math.floor(song.year / 10) * 10 + 's',
           keywords: song.keywords,
           structure: getStructure(song.title),
         },
