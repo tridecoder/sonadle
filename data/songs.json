@@ -12,16 +12,16 @@
     "difficulty": 2
   },
   {
-    "title": "Ceremony",
-    "artist": "New Order",
-    "album": "Movement",
-    "year": 1981,
-    "genre": "Rock",
-    "keywords": "Joy Division, post-punk, Manchester",
-    "emoji_hint": "💒👰🤵🕯️😰",
-    "lyric_hint": "This is why events unnerve me\nI watch the news and it burns me",
+    "title": "Tú Me Dejaste De Querer",
+    "artist": "C. Tangana",
+    "album": "El Madrileño",
+    "year": 2021,
+    "genre": "Pop",
+    "keywords": "El Madrileño, flamenco urbano, La Húngara",
+    "emoji_hint": "👉👋🚫❤️😢🫴",
+    "lyric_hint": "Tú me dejaste de querer cuando te necesitaba\nCuando más falta hacía, tú me diste la espalda",
     "cover_url": "",
-    "difficulty": 4
+    "difficulty": 2
   },
   {
     "title": "SAOKO",
@@ -216,16 +216,16 @@
     "difficulty": 2
   },
   {
-    "title": "Tú Me Dejaste De Querer",
-    "artist": "C. Tangana",
-    "album": "El Madrileño",
-    "year": 2021,
-    "genre": "Pop",
-    "keywords": "El Madrileño, flamenco urbano, La Húngara",
-    "emoji_hint": "👉👋🚫❤️😢🫴",
-    "lyric_hint": "Tú me dejaste de querer cuando te necesitaba\nCuando más falta hacía, tú me diste la espalda",
+    "title": "Ceremony",
+    "artist": "New Order",
+    "album": "Movement",
+    "year": 1981,
+    "genre": "Rock",
+    "keywords": "Joy Division, post-punk, Manchester",
+    "emoji_hint": "💒👰🤵🕯️😰",
+    "lyric_hint": "This is why events unnerve me\nI watch the news and it burns me",
     "cover_url": "",
-    "difficulty": 2
+    "difficulty": 4
   },
   {
     "title": "La vida cañón",
