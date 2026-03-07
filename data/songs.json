@@ -12,16 +12,16 @@
     "difficulty": 2
   },
   {
-    "title": "Break My Soul",
-    "artist": "Beyoncé",
-    "album": "Renaissance",
-    "year": 2022,
-    "genre": "Pop",
-    "keywords": "Renaissance, house music, gran dimisión",
-    "emoji_hint": "💔👻💥🤯",
-    "lyric_hint": "You won't break my soul\nI'm about to explode",
+    "title": "Washing Machine Heart",
+    "artist": "Mitski",
+    "album": "Be the Cowboy",
+    "year": 2018,
+    "genre": "Indie",
+    "keywords": "TikTok viral, cowboy, amor desesperado",
+    "emoji_hint": "🧺🌀👟❤️",
+    "lyric_hint": "Toss your dirty shoes in my washing machine heart\nBaby, bang it up inside",
     "cover_url": "",
-    "difficulty": 2
+    "difficulty": 4
   },
   {
     "title": "SAOKO",
@@ -156,16 +156,16 @@
     "difficulty": 2
   },
   {
-    "title": "Washing Machine Heart",
-    "artist": "Mitski",
-    "album": "Be the Cowboy",
-    "year": 2018,
-    "genre": "Indie",
-    "keywords": "TikTok viral, cowboy, amor desesperado",
-    "emoji_hint": "🧺🌀👟❤️",
-    "lyric_hint": "Toss your dirty shoes in my washing machine heart\nBaby, bang it up inside",
+    "title": "Break My Soul",
+    "artist": "Beyoncé",
+    "album": "Renaissance",
+    "year": 2022,
+    "genre": "Pop",
+    "keywords": "Renaissance, house music, gran dimisión",
+    "emoji_hint": "💔👻💥🤯",
+    "lyric_hint": "You won't break my soul\nI'm about to explode",
     "cover_url": "",
-    "difficulty": 4
+    "difficulty": 2
   },
   {
     "title": "Copacabana",
