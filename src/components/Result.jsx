@@ -1,5 +1,9 @@
 import { useState, useEffect, useRef } from 'react'
 
+function normalize(s) {
+  return s.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').trim()
+}
+
 function AppleMusicWidget({ title, artist }) {
   const [embedUrl, setEmbedUrl] = useState(null)
   const fetched = useRef(false)
@@ -8,10 +12,14 @@ function AppleMusicWidget({ title, artist }) {
     if (!title || !artist || fetched.current) return
     fetched.current = true
     const q = encodeURIComponent(`${artist} ${title}`)
-    fetch(`https://itunes.apple.com/search?term=${q}&media=music&entity=song&limit=1&country=es`)
+    fetch(`https://itunes.apple.com/search?term=${q}&media=music&entity=song&limit=10&country=es`)
       .then(r => r.json())
       .then(data => {
-        const track = data.results?.[0]
+        const expectedArtist = normalize(artist)
+        const track = data.results?.find(t => {
+          const resultArtist = normalize(t.artistName || '')
+          return resultArtist.includes(expectedArtist) || expectedArtist.includes(resultArtist)
+        })
         if (track?.trackViewUrl) {
           setEmbedUrl(track.trackViewUrl.replace('music.apple.com', 'embed.music.apple.com'))
         }
