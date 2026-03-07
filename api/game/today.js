@@ -1,4 +1,4 @@
-import { getTodaySong, getInitialHint } from '../_lib/songs.js'
+import { getTodaySong, getGameClue } from '../_lib/songs.js'
 
 export default function handler(req, res) {
   if (req.method !== 'GET') {
@@ -12,7 +12,8 @@ export default function handler(req, res) {
   res.setHeader('Vercel-CDN-Cache-Control', 'no-store')
   res.json({
     game_number: gameNumber,
-    max_attempts: 6,
-    initial_hint: getInitialHint(song),
+    max_attempts: 4,
+    max_questions: 5,
+    clue: getGameClue(song),
   })
 }

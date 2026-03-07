@@ -1,4 +1,4 @@
-import { getTodaySong, compareGuess, getProgressiveHint } from '../_lib/songs.js'
+import { getTodaySong } from '../_lib/songs.js'
 import { checkAnswer } from '../_lib/normalize.js'
 
 export default function handler(req, res) {
@@ -6,22 +6,20 @@ export default function handler(req, res) {
     return res.status(405).json({ error: 'Method not allowed' })
   }
 
-  const { title, artist, attempt_num } = req.body || {}
+  const { title, attempt_num } = req.body || {}
 
   if (!title || typeof title !== 'string') {
     return res.status(400).json({ error: 'Falta el campo title' })
   }
 
   const attemptNum = parseInt(attempt_num, 10)
-  if (!attemptNum || attemptNum < 1 || attemptNum > 6) {
-    return res.status(400).json({ error: 'attempt_num debe estar entre 1 y 6' })
+  if (!attemptNum || attemptNum < 1 || attemptNum > 4) {
+    return res.status(400).json({ error: 'attempt_num debe estar entre 1 y 4' })
   }
 
   const { song, gameNumber } = getTodaySong()
   const isCorrect = checkAnswer(title, song.title)
-  const finished = isCorrect || attemptNum >= 6
-
-  const feedback = compareGuess(title, artist || '', song)
+  const finished = isCorrect || attemptNum >= 4
 
   const response = {
     game_number: gameNumber,
@@ -29,16 +27,9 @@ export default function handler(req, res) {
     is_correct: isCorrect,
     finished,
     solved: isCorrect,
-    guess: { title, artist: artist || '' },
-    feedback,
+    guess: title,
   }
 
-  // Pista progresiva si falla y quedan intentos
-  if (!isCorrect && attemptNum < 6) {
-    response.progressive_hint = getProgressiveHint(song, attemptNum)
-  }
-
-  // Revelar cancion si la partida termina
   if (finished) {
     response.revealed = {
       title: song.title,

@@ -326,3 +326,304 @@ Independientemente de cual sea el juego diario, un **"Sonadle Connections" seman
 - [Bandle Creator Interview - Berklee](https://online.berklee.edu/takenote/bandle-creator-johann-levy-on-the-music-quiz-100k-daily-players-love/)
 - [Guess the Song by Word Cloud - CustomerThink](https://customerthink.com/can-you-guess-a-song-by-its-word-cloud/)
 - [Spotle Game Guide - AI Trendy Game](https://aitrendygame.com/blog/spotle-spotify-artist-guessing-game-guide)
+
+---
+
+## 7. Cinco mecanicas nuevas para explorar
+
+Estas cinco ideas no repiten tal cual las mecanicas investigadas arriba. Estan pensadas para ampliar el Sonadle actual con tres criterios: **anti-Google**, **personalidad propia** y **encaje razonable con el prototipo ya montado**.
+
+### MECANICA I: "Termometro de Cercania"
+**Idea base:** en vez de decir al jugador que atributo concreto ha acertado, el juego devuelve una sensacion de distancia: **helado, tibio, caliente, ardiendo**.
+
+**Como funciona:**
+1. El jugador introduce una cancion como intento
+2. El sistema calcula una puntuacion de cercania respecto a la respuesta real
+3. La cercania sale de una mezcla ponderada de atributos:
+   - mismo artista = muchisimos puntos
+   - misma decada = bastantes puntos
+   - mismo genero = bastantes puntos
+   - mismo numero de palabras = algunos puntos
+   - coincidencia parcial de keywords = algunos puntos
+4. El feedback no dice exactamente "has acertado el genero", sino algo tipo:
+   - **Helado** (0-24)
+   - **Tibio** (25-49)
+   - **Caliente** (50-74)
+   - **Ardiendo** (75-99)
+5. Si acierta, gana. Si no, usa esa temperatura para afinar el siguiente guess
+
+**Lo bueno:**
+- Es mas misterioso que un grid de atributos
+- Reduce aun mas la googleabilidad porque no da pistas literales
+- Hace que cada guess importe de verdad: no buscas solo "cualquier cancion", buscas una cancion estrategica
+
+**Riesgo:**
+- Puede resultar demasiado opaco si no se acompana con una pista adicional cada 2 intentos
+
+**Viabilidad:**
+- **Alta**. Se monta con los campos ya existentes y una formula de scoring
+
+---
+
+### MECANICA J: "Pistas Negativas"
+**Idea base:** en lugar de revelar lo que la cancion SI es, el juego revela lo que **NO es**.
+
+**Como funciona:**
+1. El jugador hace un intento
+2. Si falla, el sistema desbloquea una pista negativa:
+   - "No es de los 80"
+   - "No es una banda"
+   - "No tiene una sola palabra en el titulo"
+   - "No es una cancion en ingles"
+   - "No pertenece al genero indie"
+3. Las negativas se acumulan hasta formar un "marco de descarte"
+4. El jugador deduce la respuesta por eliminacion
+
+**Por que tiene gracia:**
+- Cambia la energia del juego: no sientes que te regalan pistas, sientes que te van cerrando puertas
+- Es muy anti-Google. "No es X, no es Y, no es Z" no produce una busqueda util
+- Tiene tono mas de acertijo, que le sienta bien al formato diario
+
+**Riesgo:**
+- Exige una taxonomia algo mas rica de canciones: idioma, tipo de artista, era, quiza pais o mood
+
+**Viabilidad:**
+- **Media**. Parte se puede hacer con lo que ya hay; para que luzca de verdad necesita algunos campos nuevos
+
+---
+
+### MECANICA K: "Arbol de Pistas"
+**Idea base:** despues de cada fallo, no se revela una pista fija: el jugador **elige** entre dos caminos.
+
+**Como funciona:**
+1. Tras fallar, aparecen dos cartas de pista
+2. El jugador solo puede abrir una
+3. Ejemplos de parejas:
+   - **Letra** o **Contexto**
+   - **Dato frio** o **Pista editorial**
+   - **Portada** o **Keyword**
+   - **Ano** o **Inicial del artista**
+4. Segun lo que elija, su partida toma un camino distinto
+
+**Por que mejora Sonadle:**
+- Anade agencia sin complicar mucho el loop
+- Hace que dos personas puedan jugar el mismo dia y vivir partidas ligeramente distintas
+- Favorece comentarios tipo "yo habria abierto la de portada, no la de letra"
+
+**Riesgo:**
+- Si una rama es siempre mucho mejor que la otra, se rompe la ilusion de eleccion
+
+**Viabilidad:**
+- **Alta**. Reaprovecha casi todas las pistas que ya existen o ya estan previstas en el PRD
+
+**Recomendacion:**
+- Es de las mejores para una primera iteracion porque da sensacion de juego nuevo sin rehacer toda la base
+
+---
+
+### MECANICA L: "Portada Infiltrada"
+**Idea base:** en vez de mostrar una sola portada pixelada, se muestran **4 portadas muy degradadas** y solo una pertenece a la cancion correcta.
+
+**Como funciona:**
+1. A partir del intento 3 o 4, aparece un bloque visual con 4 mini-portadas
+2. Todas son de la misma era o un genero parecido para que no sea trivial
+3. El jugador no tiene que acertar aun la cancion, pero puede intentar detectar cual es la portada "real"
+4. Si acierta la portada infiltrada:
+   - gana una pista extra
+   - o mantiene un intento adicional
+5. Si falla, no pasa nada o pierde la oportunidad de esa ventaja
+
+**Lo bueno:**
+- Mete una microdecision visual dentro del loop principal
+- Es compartible y queda bonito en movil
+- Reduce el problema de Google Lens porque no hay una sola imagen limpia y encima hay senuelos
+
+**Riesgo:**
+- Requiere conseguir portadas y tratarlas visualmente bien
+
+**Viabilidad:**
+- **Media**. Muy apetecible, pero depende de tener un pipeline fiable de imagenes
+
+---
+
+### MECANICA M: "Pista JNSP"
+**Idea base:** una vez por partida, el jugador puede pedir una pista redactada con voz de jenesaispop, no como dato tecnico sino como **contexto cultural**.
+
+**Como funciona:**
+1. El jugador guarda este comodin para cuando quiera
+2. Al activarlo, recibe una pista corta del estilo:
+   - "La que hizo que medio indie patrio se viniera arriba"
+   - "Ese hit que parecia una broma y acabo devorando el verano"
+   - "Una de esas canciones que sobrevivieron mejor que el disco"
+3. No cita letra, titulo ni artista: solo marco cultural, sensacion o legado
+4. Usar la pista cuesta algo:
+   - perder un punto
+   - bajar la puntuacion maxima
+   - o consumir directamente un intento
+
+**Por que puede ser diferencial:**
+- Ningun clon generico tiene esto con gracia
+- Encaja con la personalidad editorial de jnsp
+- Convierte el juego en algo mas reconocible como "producto del sitio", no una plantilla musical intercambiable
+
+**Riesgo:**
+- Requiere mano editorial. Si se automatiza mal, pierde toda la gracia
+
+**Viabilidad:**
+- **Media-Baja** si quieres hacerlo cada dia a mano
+- **Alta** si se reserva para canciones especiales o para un modo premium/bonus
+
+---
+
+### MECANICA N: "Ronda si/no"
+**Idea base:** antes de intentar adivinar la cancion, el jugador hace hasta 3 preguntas cerradas que el juego responde con si o no.
+
+**Como funciona:**
+1. Al empezar la partida, el jugador ve la pista inicial (genero, decada, estructura del titulo, etc.)
+2. Tiene 3 "preguntas" que puede gastar cuando quiera (antes del primer intento, entre intentos, o repartidas)
+3. El juego solo responde SI o NO. Ejemplos de preguntas validas:
+   - "¿El titulo tiene mas de 4 palabras?"
+   - "¿Es de antes de 1995?"
+   - "¿Es una banda (no solista)?"
+   - "¿La cancion esta en ingles?"
+   - "¿El artista es español?"
+4. Tras usar las 3 respuestas (o renunciar a alguna), sigue el flujo normal: 6 intentos para acertar con pistas progresivas
+
+**Por que tiene gracia:**
+- Añade una fase tactica: que preguntas hacer y cuando
+- Muy anti-Google: "si/no" no da texto buscable
+- Quien conoce bien la musica elige mejor las preguntas y acota mas rapido
+
+**Riesgo:**
+- Hay que limitar el banco de preguntas a las que el sistema puede responder con los datos disponibles (artista, ano, genero, idioma, num. palabras, tipo de artista)
+
+**Viabilidad:**
+- **Alta**. Todo con metadata que ya tienes o es facil de anadir (idioma, solista/banda)
+
+---
+
+### MECANICA O: "Banda sonora"
+**Idea base:** la pista principal es que la cancion **aparecio en una pelicula, serie o anuncio**. El jugador deduce por contexto audiovisual, no por letra.
+
+**Como funciona:**
+1. Pista inicial: "Esta cancion formo parte de la banda sonora de una pelicula/serie muy conocida"
+2. Con cada fallo se revela algo mas sobre el contexto:
+   - Ano de estreno de la peli/serie
+   - Genero (drama, comedia, thriller...)
+   - Pais de produccion
+   - Una escena clave ("suena cuando el protagonista corre bajo la lluvia")
+3. El titulo de la peli/serie no se revela hasta el final (o nunca, para no spoilear)
+4. 6 intentos como siempre
+
+**Por que tiene gracia:**
+- Mucha gente recuerda canciones por "esa de la peli de X". Es un ancla emocional fuerte
+- Muy compartible: "hoy era la de Stranger Things / la de 500 dias con ella"
+- Diferencia dias tematicos: se puede curar una semana "canciones de cine"
+
+**Riesgo:**
+- Requiere base de datos de sincronizacion cancion–peli/serie. No todo el catalogo tiene esa info
+- Si la pista de escena es muy concreta, puede ser googeable
+
+**Viabilidad:**
+- **Media**. Hay APIs y bases (TMDb, IMDb, Spotify "aparece en") pero no cubren todo. Se puede empezar con un subconjunto de canciones que tengan ese dato
+
+---
+
+### MECANICA P: "Verso mezclado"
+**Idea base:** en vez de mostrar un verso de letra en orden, se muestran las **palabras del verso reordenadas** (por ejemplo alfabeticamente o por longitud). Reconoces la cancion por el vocabulario, no por la frase literal.
+
+**Como funciona:**
+1. Se toma un verso representativo de la cancion (evitando el titulo)
+2. Las palabras se reordenan con una regla fija: orden alfabetico, de mas larga a mas corta, o aleatorio pero siempre el mismo para esa cancion
+3. Ejemplo: "Do you want to feel how it feels" → "Do feel feel how it to want you" (alfabetico) o "want feel you Do how it to feel" (longitud)
+4. Cada fallo puede revelar una palabra mas en posicion correcta, o desbloquear otro verso mezclado
+5. 6 intentos
+
+**Por que tiene gracia:**
+- Quien se sabe la letra reconoce las palabras sueltas y "recompone" mentalmente
+- Casi imposible de googlear: buscar "do feel how it to want" no devuelve la cancion
+- Se puede combinar con la nube de palabras: un verso mezclado + 3 palabras clave de otro
+
+**Riesgo:**
+- Canciones con versos muy genericos ("I love you", "tonight", "baby") dan poco. Hay que elegir versos distintivos
+
+**Viabilidad:**
+- **Alta**. Solo necesitas el texto de la letra y una funcion de reordenacion
+
+---
+
+### MECANICA Q: "Conexion con ayer"
+**Idea base:** la cancion del dia tiene una **relacion deliberada con la cancion de ayer** (mismo artista, mismo album, mismo ano, mismo genero muy concreto). Quien jugo ayer tiene una pista implicita; al final se revela el vinculo.
+
+**Como funciona:**
+1. El juego no anuncia la conexion al inicio
+2. Se juega normal: pistas, 6 intentos, etc.
+3. Al terminar (acierto o no), se muestra: "La cancion de ayer era de [artista]. Hoy era del mismo artista" / "Ambas son de 1985" / "Hoy era del mismo disco que ayer"
+4. Opcional: si el jugador jugo ayer, se le puede dar una pista sutil al inicio: "Tiene algo en comun con la cancion de ayer" sin decir que
+
+**Por que tiene gracia:**
+- Incentiva jugar seguido: "mañana quizas sea del mismo disco"
+- Genera continuidad y sensacion de "temporada", no de dias sueltos
+- La revelacion final es un momento extra para compartir ("¡era del mismo año!")
+
+**Riesgo:**
+- La cola de canciones hay que curarla por pares o bloques, no es totalmente aleatorio
+- Si alguien no jugo ayer, no debe sentirse en desventaja clara; la conexion es un extra, no la clave
+
+**Viabilidad:**
+- **Media-Alta**. Requiere logica de programacion de canciones (por bloques tematicos o por atributos compartidos), no solo "siguiente de la lista"
+
+---
+
+### MECANICA R: "Triple opcion"
+**Idea base:** en algun momento del juego (por ejemplo tras 2 fallos), en vez de escribir libre, el jugador **elige entre 3 titulos** que el juego propone. Acelera y acerca a quien no tiene tanto repertorio mental.
+
+**Como funciona:**
+1. Hasta el intento 2 (o 3), el flujo es el habitual: busqueda libre, feedback, pistas
+2. A partir de cierto intento, aparece la opcion "¿Prefieres elegir entre 3 opciones?":
+   - El juego muestra 3 canciones: la correcta + 2 distractores del mismo artista, o del mismo ano, o del mismo genero
+   - El jugador elige una. Si acierta, gana. Si no, cuenta como intento y se revela pista
+3. Se puede limitar a 1 o 2 "rondas de triple" por partida para no banalizar
+
+**Por que tiene gracia:**
+- Reduce la frustracion de "no me sale el nombre" cuando ya casi lo tienes
+- Mantiene la dificultad en las primeras rondas (deduccion pura) y suaviza el final
+- Puede ser un comodin que el jugador activa cuando quiera ("dame 3 opciones")
+
+**Riesgo:**
+- Si las 3 opciones son muy obvias, el juego se desinfla. Los distractores tienen que ser creibles
+
+**Viabilidad:**
+- **Alta**. Requiere elegir 2 canciones "parecidas" por artista/ano/genero desde tu base. Con el dataset actual se puede hacer
+
+---
+
+### Prioridad sugerida (mecanicas I–M)
+
+Si hubiera que elegir por impacto vs coste, yo iria asi:
+
+1. **Arbol de Pistas** -- barata, clara y muy aprovechable con lo que ya hay
+2. **Termometro de Cercania** -- le da una personalidad distinta al guessing
+3. **Pistas Negativas** -- muy buena cuando el dataset tenga mas atributos
+4. **Portada Infiltrada** -- muy lucida, pero depende de imagenes
+5. **Pista JNSP** -- la mas propia de marca, ideal cuando quieras meter capa editorial
+
+### Prioridad sugerida (mecanicas N–R)
+
+Para esta segunda tanda de propuestas:
+
+1. **Ronda si/no** -- muy facil de implementar, refuerza la fase tactica sin cambiar el core
+2. **Verso mezclado** -- anti-Google fuerte, solo pide letras que ya tienes
+3. **Triple opcion** -- buena para no frustrar a quien "casi lo tiene"; encaja como comodin
+4. **Conexion con ayer** -- ideal cuando tengas cola de canciones y quieras fidelizar
+5. **Banda sonora** -- muy atractiva pero exige datos cancion–peli/serie; mejor como modo tematico o subset del catalogo
+
+### Combinacion que mas me convence
+
+La combinacion mas fina para Sonadle no seria usar una sola de estas, sino esta mezcla:
+
+- **Core diario**: `Arbol de Pistas`
+- **Feedback de intentos**: `Termometro de Cercania`
+- **Comodin premium**: `Pista JNSP`
+
+Eso daria un juego mas estrategico, menos clon de Wordle y mas reconocible como algo propio de jenesaispop.

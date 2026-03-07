@@ -6,11 +6,21 @@ export async function fetchToday() {
   return res.json()
 }
 
-export async function submitAttempt(title, artist, attemptNum) {
+export async function submitAttempt(title, attemptNum) {
   const res = await fetch(`${BASE}/game/attempt`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ title, artist, attempt_num: attemptNum }),
+    body: JSON.stringify({ title, attempt_num: attemptNum }),
+  })
+  if (!res.ok) throw new Error(`Error ${res.status}`)
+  return res.json()
+}
+
+export async function askQuestion(question) {
+  const res = await fetch(`${BASE}/game/question`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ question }),
   })
   if (!res.ok) throw new Error(`Error ${res.status}`)
   return res.json()

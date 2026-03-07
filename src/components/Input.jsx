@@ -50,7 +50,7 @@ export default function Input({ onSubmit, disabled }) {
   async function handleSubmit() {
     if (!selected || disabled) return
 
-    const result = await onSubmit(selected.title, selected.artist)
+    const result = await onSubmit(selected.title)
 
     if (result && !result.is_correct) {
       setShaking(true)

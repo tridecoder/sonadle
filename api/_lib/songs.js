@@ -36,72 +36,31 @@ export function getTodaySong() {
 }
 
 /**
- * Estructura del titulo: primera letra visible + guiones.
- * Ej: "Kill Bill" → "K _ _ _   B _ _ _"
+ * Devuelve la pista inicial del juego:
+ * frase editorial JNSP + genero + decada.
  */
-function getTitleStructure(title) {
-  const clean = title.replace(/\(.*?\)/g, '').trim()
-  return clean
-    .split(/\s+/)
-    .map(w => w[0] + (w.length > 1 ? ' ' + '_ '.repeat(w.length - 1).trim() : ''))
-    .join('   ')
-}
-
-/**
- * Cuenta palabras del titulo (sin parentesis).
- */
-function getWordCount(title) {
-  return title.replace(/\(.*?\)/g, '').trim().split(/\s+/).length
-}
-
-/**
- * Devuelve la pista inicial: genero, decada, estructura del titulo.
- */
-export function getInitialHint(song) {
+export function getGameClue(song) {
   return {
+    jnsp: song.jnsp_clue,
     genre: song.genre,
     decade: Math.floor(song.year / 10) * 10 + 's',
-    title_structure: getTitleStructure(song.title),
-    title_words: getWordCount(song.title),
   }
 }
 
 /**
- * Compara un intento con la cancion objetivo.
- * Devuelve feedback comparativo.
+ * Responde una pregunta de si/no sobre la cancion.
+ * Devuelve true (si) o false (no).
  */
-export function compareGuess(guessTitle, guessArtist, target) {
-  const artistMatch = guessArtist.toLowerCase().trim() === target.artist.toLowerCase().trim()
+export function answerQuestion(song, question) {
+  const wordCount = song.title.replace(/\(.*?\)/g, '').trim().split(/\s+/).length
 
-  const guessWords = getWordCount(guessTitle)
-  const targetWords = getWordCount(target.title)
-  let titleWordsDir = 'correct'
-  if (guessWords < targetWords) titleWordsDir = 'more'
-  else if (guessWords > targetWords) titleWordsDir = 'fewer'
-
-  return {
-    artist: artistMatch ? 'correct' : 'incorrect',
-    title_words: titleWordsDir,
-  }
-}
-
-/**
- * Devuelve una pista progresiva segun el intento fallido.
- * Se revela despues de cada error.
- */
-export function getProgressiveHint(song, attemptNum) {
-  switch (attemptNum) {
-    case 1:
-      return { type: 'year', value: song.year }
-    case 2:
-      return { type: 'artist_initial', value: song.artist[0] + '.' }
-    case 3:
-      return { type: 'keywords', value: song.keywords }
-    case 4:
-      return { type: 'artist', value: song.artist }
-    case 5:
-      return { type: 'lyric', value: song.lyric_hint }
-    default:
-      return null
+  switch (question) {
+    case 'title_long':   return wordCount > 3
+    case 'title_single': return wordCount === 1
+    case 'is_band':      return !!song.is_band
+    case 'is_female':    return !!song.is_female
+    case 'in_spanish':   return song.language === 'es'
+    case 'before_2000':  return song.year < 2000
+    default:             return null
   }
 }

@@ -1,5 +1,6 @@
 import { useGame } from '../hooks/useGame'
-import InitialHint from './InitialHint'
+import JNSPClue from './JNSPClue'
+import Questions from './Questions'
 import GuessHistory from './GuessHistory'
 import Input from './Input'
 import AttemptsBar from './AttemptsBar'
@@ -10,15 +11,18 @@ export default function Game() {
     loading,
     error,
     gameNumber,
-    initialHint,
+    clue,
     guesses,
-    progressiveHints,
+    answers,
     attemptsUsed,
+    questionsUsed,
     maxAttempts,
+    maxQuestions,
     finished,
     solved,
     revealedSong,
     attempt,
+    question,
   } = useGame()
 
   if (loading) {
@@ -38,14 +42,29 @@ export default function Game() {
         </div>
       </header>
 
-      <InitialHint
-        hint={initialHint}
-        revealedTitle={finished && revealedSong ? revealedSong.title : null}
-      />
+      <JNSPClue clue={clue} />
 
-      {guesses.length > 0 && (
-        <GuessHistory guesses={guesses} progressiveHints={progressiveHints} />
+      {!finished && (
+        <Questions
+          answers={answers}
+          questionsUsed={questionsUsed}
+          maxQuestions={maxQuestions}
+          onAsk={question}
+          disabled={finished}
+        />
       )}
+
+      {finished && answers.length > 0 && (
+        <Questions
+          answers={answers}
+          questionsUsed={questionsUsed}
+          maxQuestions={maxQuestions}
+          onAsk={() => {}}
+          disabled={true}
+        />
+      )}
+
+      <GuessHistory guesses={guesses} />
 
       {!finished && (
         <>
@@ -58,10 +77,12 @@ export default function Game() {
         <Result
           solved={solved}
           attemptsUsed={attemptsUsed}
+          questionsUsed={questionsUsed}
           maxAttempts={maxAttempts}
           gameNumber={gameNumber}
           song={revealedSong}
           guesses={guesses}
+          answers={answers}
         />
       )}
     </>
