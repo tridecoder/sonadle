@@ -1,16 +1,16 @@
 const BASE = '/api'
 
-export async function fetchToday(attemptsUsed = 0) {
-  const res = await fetch(`${BASE}/game/today?attempts=${attemptsUsed}`)
+export async function fetchToday() {
+  const res = await fetch(`${BASE}/game/today`)
   if (!res.ok) throw new Error(`Error ${res.status}`)
   return res.json()
 }
 
-export async function submitAttempt(answer, attemptNum) {
+export async function submitAttempt(title, artist, attemptNum) {
   const res = await fetch(`${BASE}/game/attempt`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ answer, attempt_num: attemptNum }),
+    body: JSON.stringify({ title, artist, attempt_num: attemptNum }),
   })
   if (!res.ok) throw new Error(`Error ${res.status}`)
   return res.json()

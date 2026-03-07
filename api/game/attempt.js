@@ -1,4 +1,4 @@
-import { getTodaySong, getHints } from '../_lib/songs.js'
+import { getTodaySong, compareGuess, getProgressiveHint } from '../_lib/songs.js'
 import { checkAnswer } from '../_lib/normalize.js'
 
 export default function handler(req, res) {
@@ -6,10 +6,10 @@ export default function handler(req, res) {
     return res.status(405).json({ error: 'Method not allowed' })
   }
 
-  const { answer, attempt_num } = req.body || {}
+  const { title, artist, attempt_num } = req.body || {}
 
-  if (!answer || typeof answer !== 'string') {
-    return res.status(400).json({ error: 'Falta el campo answer' })
+  if (!title || typeof title !== 'string') {
+    return res.status(400).json({ error: 'Falta el campo title' })
   }
 
   const attemptNum = parseInt(attempt_num, 10)
@@ -18,8 +18,10 @@ export default function handler(req, res) {
   }
 
   const { song, gameNumber } = getTodaySong()
-  const isCorrect = checkAnswer(answer, song.title)
+  const isCorrect = checkAnswer(title, song.title)
   const finished = isCorrect || attemptNum >= 6
+
+  const feedback = compareGuess(title, artist || '', song)
 
   const response = {
     game_number: gameNumber,
@@ -27,20 +29,22 @@ export default function handler(req, res) {
     is_correct: isCorrect,
     finished,
     solved: isCorrect,
+    guess: { title, artist: artist || '' },
+    feedback,
   }
 
-  // Pista nueva si fallo y quedan intentos
+  // Pista progresiva si falla y quedan intentos
   if (!isCorrect && attemptNum < 6) {
-    const allHints = getHints(song, attemptNum)
-    response.new_hint = allHints[allHints.length - 1]
+    response.progressive_hint = getProgressiveHint(song, attemptNum)
   }
 
   // Revelar cancion si la partida termina
   if (finished) {
-    response.title = song.title
-    response.artist = song.artist
-    response.album = song.album
-    response.cover_url = song.cover_url
+    response.revealed = {
+      title: song.title,
+      artist: song.artist,
+      album: song.album,
+    }
   }
 
   res.setHeader('Cache-Control', 'no-store')

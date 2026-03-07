@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from 'react'
 import { fetchToday, submitAttempt } from '../lib/api'
 
-const STORAGE_KEY = 'sonadle_v22'
+const STORAGE_KEY = 'sonadle_v30'
 const MAX_ATTEMPTS = 6
 
 function getTodayStr() {
@@ -27,21 +27,24 @@ function saveState(state) {
 export function useGame() {
   const [loading, setLoading] = useState(true)
   const [gameNumber, setGameNumber] = useState(null)
-  const [hints, setHints] = useState([])
+  const [initialHint, setInitialHint] = useState(null)
+  const [guesses, setGuesses] = useState([])
+  const [progressiveHints, setProgressiveHints] = useState([])
   const [attemptsUsed, setAttemptsUsed] = useState(0)
   const [finished, setFinished] = useState(false)
   const [solved, setSolved] = useState(false)
   const [revealedSong, setRevealedSong] = useState(null)
   const [error, setError] = useState(null)
 
-  // Inicializar
   useEffect(() => {
     async function init() {
       const saved = loadState()
 
       if (saved) {
         setGameNumber(saved.gameNumber)
-        setHints(saved.hints)
+        setInitialHint(saved.initialHint)
+        setGuesses(saved.guesses || [])
+        setProgressiveHints(saved.progressiveHints || [])
         setAttemptsUsed(saved.attemptsUsed)
         setFinished(saved.finished)
         setSolved(saved.solved)
@@ -51,13 +54,15 @@ export function useGame() {
       }
 
       try {
-        const data = await fetchToday(0)
+        const data = await fetchToday()
         setGameNumber(data.game_number)
-        setHints(data.hints)
+        setInitialHint(data.initial_hint)
         saveState({
           date: getTodayStr(),
           gameNumber: data.game_number,
-          hints: data.hints,
+          initialHint: data.initial_hint,
+          guesses: [],
+          progressiveHints: [],
           attemptsUsed: 0,
           finished: false,
           solved: false,
@@ -74,29 +79,39 @@ export function useGame() {
     init()
   }, [])
 
-  const attempt = useCallback(async (answer) => {
+  const attempt = useCallback(async (title, artist) => {
     if (finished || attemptsUsed >= MAX_ATTEMPTS) return null
 
     const nextAttempt = attemptsUsed + 1
 
     try {
-      const res = await submitAttempt(answer, nextAttempt)
+      const res = await submitAttempt(title, artist, nextAttempt)
 
-      const newHints = res.new_hint ? [...hints, res.new_hint] : hints
-      const revealed = res.finished
-        ? { title: res.title, artist: res.artist, album: res.album, cover_url: res.cover_url }
-        : null
+      const newGuesses = [...guesses, {
+        title: res.guess.title,
+        artist: res.guess.artist,
+        feedback: res.feedback,
+      }]
 
+      const newProgressiveHints = res.progressive_hint
+        ? [...progressiveHints, res.progressive_hint]
+        : progressiveHints
+
+      const revealed = res.revealed || null
+
+      setGuesses(newGuesses)
+      setProgressiveHints(newProgressiveHints)
       setAttemptsUsed(res.attempt_num)
       setFinished(res.finished)
       setSolved(res.solved)
-      setHints(newHints)
       if (revealed) setRevealedSong(revealed)
 
       saveState({
         date: getTodayStr(),
         gameNumber,
-        hints: newHints,
+        initialHint,
+        guesses: newGuesses,
+        progressiveHints: newProgressiveHints,
         attemptsUsed: res.attempt_num,
         finished: res.finished,
         solved: res.solved,
@@ -109,13 +124,15 @@ export function useGame() {
       setError('Error al enviar la respuesta')
       return null
     }
-  }, [finished, attemptsUsed, hints, gameNumber])
+  }, [finished, attemptsUsed, guesses, progressiveHints, gameNumber, initialHint])
 
   return {
     loading,
     error,
     gameNumber,
-    hints,
+    initialHint,
+    guesses,
+    progressiveHints,
     attemptsUsed,
     maxAttempts: MAX_ATTEMPTS,
     finished,

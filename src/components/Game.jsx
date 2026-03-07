@@ -1,5 +1,6 @@
 import { useGame } from '../hooks/useGame'
-import Hints from './Hints'
+import InitialHint from './InitialHint'
+import GuessHistory from './GuessHistory'
 import Input from './Input'
 import AttemptsBar from './AttemptsBar'
 import Result from './Result'
@@ -9,7 +10,9 @@ export default function Game() {
     loading,
     error,
     gameNumber,
-    hints,
+    initialHint,
+    guesses,
+    progressiveHints,
     attemptsUsed,
     maxAttempts,
     finished,
@@ -35,7 +38,14 @@ export default function Game() {
         </div>
       </header>
 
-      <Hints hints={hints} revealedTitle={finished && revealedSong ? revealedSong.title : null} />
+      <InitialHint
+        hint={initialHint}
+        revealedTitle={finished && revealedSong ? revealedSong.title : null}
+      />
+
+      {guesses.length > 0 && (
+        <GuessHistory guesses={guesses} progressiveHints={progressiveHints} />
+      )}
 
       {!finished && (
         <>
@@ -51,6 +61,7 @@ export default function Game() {
           maxAttempts={maxAttempts}
           gameNumber={gameNumber}
           song={revealedSong}
+          guesses={guesses}
         />
       )}
     </>

@@ -13,7 +13,7 @@ function loadSongs() {
   return _songs
 }
 
-// Fecha de inicio del juego — ajustar al dia de lanzamiento real
+// Fecha de inicio del juego
 const START_DATE = new Date('2026-03-06T00:00:00')
 
 /**
@@ -22,7 +22,6 @@ const START_DATE = new Date('2026-03-06T00:00:00')
 export function getTodaySong() {
   const songs = loadSongs()
   const now = new Date()
-  // Usar medianoche en horario de Madrid (CET/CEST)
   const madrid = new Date(now.toLocaleString('en-US', { timeZone: 'Europe/Madrid' }))
   madrid.setHours(0, 0, 0, 0)
 
@@ -37,10 +36,10 @@ export function getTodaySong() {
 }
 
 /**
- * Devuelve la estructura del titulo con la primera letra visible.
- * Ej: "Kill Bill" → "K _ _ _  B _ _ _"
+ * Estructura del titulo: primera letra visible + guiones.
+ * Ej: "Kill Bill" → "K _ _ _   B _ _ _"
  */
-function getStructure(title) {
+function getTitleStructure(title) {
   const clean = title.replace(/\(.*?\)/g, '').trim()
   return clean
     .split(/\s+/)
@@ -49,57 +48,58 @@ function getStructure(title) {
 }
 
 /**
- * Devuelve el titulo con solo la primera letra de cada palabra visible.
- * Ej: "Kill Bill" → "K___  B___"
+ * Cuenta palabras del titulo (sin parentesis).
  */
-function getInitials(title) {
-  const clean = title.replace(/\(.*?\)/g, '').trim()
-  return clean
-    .split(/\s+/)
-    .map(w => w[0] + '_'.repeat(w.length - 1))
-    .join('  ')
+function getWordCount(title) {
+  return title.replace(/\(.*?\)/g, '').trim().split(/\s+/).length
 }
 
 /**
- * Devuelve las pistas desbloqueadas segun el numero de intentos usados.
- * Pista 1: siempre visible (palabras clave + estructura del titulo)
- * Pista 2: tras intento 1 (año)
- * Pista 3: tras intento 2 (género)
- * Pista 4: tras intento 3 (artista)
- * Pista 5: tras intento 4 (titulo con iniciales)
- * Pista 6: tras intento 5 (fragmento de letra)
+ * Devuelve la pista inicial: genero, decada, estructura del titulo.
  */
-export function getHints(song, attemptsUsed) {
-  const hints = []
-  const maxHints = Math.min(attemptsUsed + 1, 6)
-
-  for (let i = 1; i <= maxHints; i++) {
-    hints.push(getHint(song, i))
+export function getInitialHint(song) {
+  return {
+    genre: song.genre,
+    decade: Math.floor(song.year / 10) * 10 + 's',
+    title_structure: getTitleStructure(song.title),
+    title_words: getWordCount(song.title),
   }
-
-  return hints
 }
 
-function getHint(song, number) {
-  switch (number) {
+/**
+ * Compara un intento con la cancion objetivo.
+ * Devuelve feedback comparativo.
+ */
+export function compareGuess(guessTitle, guessArtist, target) {
+  const artistMatch = guessArtist.toLowerCase().trim() === target.artist.toLowerCase().trim()
+
+  const guessWords = getWordCount(guessTitle)
+  const targetWords = getWordCount(target.title)
+  let titleWordsDir = 'correct'
+  if (guessWords < targetWords) titleWordsDir = 'more'
+  else if (guessWords > targetWords) titleWordsDir = 'fewer'
+
+  return {
+    artist: artistMatch ? 'correct' : 'incorrect',
+    title_words: titleWordsDir,
+  }
+}
+
+/**
+ * Devuelve una pista progresiva segun el intento fallido.
+ * Se revela despues de cada error.
+ */
+export function getProgressiveHint(song, attemptNum) {
+  switch (attemptNum) {
     case 1:
-      return {
-        type: 'clue',
-        value: {
-          decade: Math.floor(song.year / 10) * 10 + 's',
-          keywords: song.keywords,
-          structure: getStructure(song.title),
-        },
-      }
-    case 2:
       return { type: 'year', value: song.year }
+    case 2:
+      return { type: 'artist_initial', value: song.artist[0] + '.' }
     case 3:
-      return { type: 'genre', value: song.genre }
+      return { type: 'keywords', value: song.keywords }
     case 4:
       return { type: 'artist', value: song.artist }
     case 5:
-      return { type: 'initials', value: getInitials(song.title) }
-    case 6:
       return { type: 'lyric', value: song.lyric_hint }
     default:
       return null

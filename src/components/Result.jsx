@@ -22,15 +22,18 @@ function Countdown() {
   return <div className="snd-result__countdown">{text}</div>
 }
 
-export default function Result({ solved, attemptsUsed, maxAttempts, gameNumber, song }) {
+export default function Result({ solved, attemptsUsed, maxAttempts, gameNumber, song, guesses }) {
   const [copied, setCopied] = useState(false)
 
   function share() {
-    const emojis = Array.from({ length: attemptsUsed }, (_, i) =>
-      i === attemptsUsed - 1 && solved ? '\uD83D\uDFE9' : '\u2B1C'
-    ).join('')
+    const rows = (guesses || []).map(g => {
+      const artist = g.feedback.artist === 'correct' ? '🟩' : '🟥'
+      const words = g.feedback.title_words === 'correct' ? '🟩'
+        : g.feedback.title_words === 'more' ? '⬆️' : '⬇️'
+      return `${artist}${words}`
+    })
 
-    const text = `Sonadle #${gameNumber} — ${solved ? attemptsUsed : 'X'}/${maxAttempts}\n${emojis}\nsonadle.jenesaispop.com`
+    const text = `Sonadle #${gameNumber} — ${solved ? attemptsUsed : 'X'}/${maxAttempts}\n${rows.join('\n')}\nsonadle.jenesaispop.com`
 
     navigator.clipboard.writeText(text).then(() => {
       setCopied(true)

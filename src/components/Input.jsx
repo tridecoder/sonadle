@@ -3,13 +3,13 @@ import { searchSongs } from '../lib/api'
 
 export default function Input({ onSubmit, disabled }) {
   const [value, setValue] = useState('')
+  const [selected, setSelected] = useState(null)
   const [suggestions, setSuggestions] = useState([])
   const [showSuggestions, setShowSuggestions] = useState(false)
   const [shaking, setShaking] = useState(false)
   const debounceRef = useRef(null)
   const wrapperRef = useRef(null)
 
-  // Cerrar sugerencias al clicar fuera
   useEffect(() => {
     function handleClick(e) {
       if (wrapperRef.current && !wrapperRef.current.contains(e.target)) {
@@ -23,6 +23,7 @@ export default function Input({ onSubmit, disabled }) {
   const handleInput = useCallback((e) => {
     const q = e.target.value
     setValue(q)
+    setSelected(null)
 
     clearTimeout(debounceRef.current)
 
@@ -40,16 +41,16 @@ export default function Input({ onSubmit, disabled }) {
   }, [])
 
   function selectSuggestion(song) {
-    setValue(song.title)
+    setValue(`${song.title} — ${song.artist}`)
+    setSelected(song)
     setShowSuggestions(false)
     setSuggestions([])
   }
 
   async function handleSubmit() {
-    const answer = value.trim()
-    if (!answer || disabled) return
+    if (!selected || disabled) return
 
-    const result = await onSubmit(answer)
+    const result = await onSubmit(selected.title, selected.artist)
 
     if (result && !result.is_correct) {
       setShaking(true)
@@ -57,6 +58,7 @@ export default function Input({ onSubmit, disabled }) {
     }
 
     setValue('')
+    setSelected(null)
     setSuggestions([])
     setShowSuggestions(false)
   }
@@ -71,7 +73,7 @@ export default function Input({ onSubmit, disabled }) {
         <input
           type="text"
           className="snd-input"
-          placeholder="Busca la canción..."
+          placeholder="Busca una canción..."
           autoComplete="off"
           spellCheck="false"
           value={value}
@@ -97,7 +99,7 @@ export default function Input({ onSubmit, disabled }) {
       <button
         className="snd-btn snd-btn--primary"
         onClick={handleSubmit}
-        disabled={disabled || !value.trim()}
+        disabled={disabled || !selected}
       >
         Intentar
       </button>
