@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from 'react'
 import { fetchToday, submitAttempt } from '../lib/api'
 
-const STORAGE_KEY = 'sonadle_v21'
+const STORAGE_KEY = 'sonadle_v22'
 const MAX_ATTEMPTS = 6
 
 function getTodayStr() {
