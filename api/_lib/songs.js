@@ -37,14 +37,14 @@ export function getTodaySong() {
 }
 
 /**
- * Devuelve la estructura del titulo: guiones bajos sin letras.
- * Ej: "Kill Bill" → "_ _ _ _  _ _ _ _"
+ * Devuelve la estructura del titulo con la primera letra visible.
+ * Ej: "Kill Bill" → "K _ _ _  B _ _ _"
  */
 function getStructure(title) {
   const clean = title.replace(/\(.*?\)/g, '').trim()
   return clean
     .split(/\s+/)
-    .map(w => w.split('').map(() => '_').join(' '))
+    .map(w => w[0] + (w.length > 1 ? ' ' + '_ '.repeat(w.length - 1).trim() : ''))
     .join('   ')
 }
 

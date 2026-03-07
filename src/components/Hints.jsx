@@ -3,9 +3,11 @@ function HintCard({ hint }) {
     case 'clue':
       return (
         <div className="snd-hint snd-hint--clue">
-          <span className="snd-hint__value snd-hint__value--decade">{hint.value.decade}</span>
-          <span className="snd-hint__value snd-hint__value--keywords">{hint.value.keywords}</span>
-          <span className="snd-hint__value snd-hint__value--structure">{hint.value.structure}</span>
+          <div className="snd-clue__row">
+            <span className="snd-clue__decade">{hint.value.decade}</span>
+            <span className="snd-clue__keywords">{hint.value.keywords}</span>
+          </div>
+          <div className="snd-clue__structure">{hint.value.structure}</div>
         </div>
       )
 
