@@ -12,16 +12,16 @@
     "difficulty": 2
   },
   {
-    "title": "Kill Bill",
-    "artist": "SZA",
-    "album": "SOS",
-    "year": 2022,
-    "genre": "Soul / R&B",
-    "keywords": "katana, venganza, Tarantino",
-    "emoji_hint": "🗡️💀💛🖤💔👤",
-    "lyric_hint": "I might kill my ex\nNot the best idea",
+    "title": "Ceremony",
+    "artist": "New Order",
+    "album": "Movement",
+    "year": 1981,
+    "genre": "Rock",
+    "keywords": "ritual, nervios, noticias",
+    "emoji_hint": "💒👰🤵🕯️😰",
+    "lyric_hint": "This is why events unnerve me\nI watch the news and it burns me",
     "cover_url": "",
-    "difficulty": 3
+    "difficulty": 4
   },
   {
     "title": "SAOKO",
@@ -120,16 +120,16 @@
     "difficulty": 3
   },
   {
-    "title": "Ceremony",
-    "artist": "New Order",
-    "album": "Movement",
-    "year": 1981,
-    "genre": "Rock",
-    "keywords": "ritual, nervios, noticias",
-    "emoji_hint": "💒👰🤵🕯️😰",
-    "lyric_hint": "This is why events unnerve me\nI watch the news and it burns me",
+    "title": "Kill Bill",
+    "artist": "SZA",
+    "album": "SOS",
+    "year": 2022,
+    "genre": "Soul / R&B",
+    "keywords": "katana, venganza, Tarantino",
+    "emoji_hint": "🗡️💀💛🖤💔👤",
+    "lyric_hint": "I might kill my ex\nNot the best idea",
     "cover_url": "",
-    "difficulty": 4
+    "difficulty": 3
   },
   {
     "title": "ay mamá",
