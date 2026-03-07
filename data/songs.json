@@ -15,19 +15,19 @@
     "difficulty": 2
   },
   {
-    "title": "Bizarre Love Triangle",
-    "artist": "New Order",
-    "album": "Brotherhood",
-    "year": 1986,
-    "genre": "Electrónica",
-    "is_band": true,
+    "title": "Tú Me Dejaste De Querer",
+    "artist": "C. Tangana",
+    "album": "El Madrileño",
+    "year": 2021,
+    "genre": "Pop",
+    "is_band": false,
     "is_female": false,
-    "language": "en",
-    "jnsp_clue": "El himno que suena en cada historia de amor mal planteada y aun así te hace bailar",
-    "keywords": "Factory Records, synth-pop, triángulo amoroso",
-    "lyric_hint": "Every time I see you falling\nI get down on my knees and pray",
+    "language": "es",
+    "jnsp_clue": "La que con La Húngara convirtió el flamenco en algo que el indie también podía escuchar sin complejos",
+    "keywords": "El Madrileño, flamenco urbano, La Húngara",
+    "lyric_hint": "Tú me dejaste de querer cuando te necesitaba\nCuando más falta hacía, tú me diste la espalda",
     "cover_url": "",
-    "difficulty": 3
+    "difficulty": 2
   },
   {
     "title": "SAOKO",
@@ -255,19 +255,19 @@
     "difficulty": 3
   },
   {
-    "title": "Tú Me Dejaste De Querer",
-    "artist": "C. Tangana",
-    "album": "El Madrileño",
-    "year": 2021,
-    "genre": "Pop",
-    "is_band": false,
+    "title": "Bizarre Love Triangle",
+    "artist": "New Order",
+    "album": "Brotherhood",
+    "year": 1986,
+    "genre": "Electrónica",
+    "is_band": true,
     "is_female": false,
-    "language": "es",
-    "jnsp_clue": "La que con La Húngara convirtió el flamenco en algo que el indie también podía escuchar sin complejos",
-    "keywords": "El Madrileño, flamenco urbano, La Húngara",
-    "lyric_hint": "Tú me dejaste de querer cuando te necesitaba\nCuando más falta hacía, tú me diste la espalda",
+    "language": "en",
+    "jnsp_clue": "El himno que suena en cada historia de amor mal planteada y aun así te hace bailar",
+    "keywords": "Factory Records, synth-pop, triángulo amoroso",
+    "lyric_hint": "Every time I see you falling\nI get down on my knees and pray",
     "cover_url": "",
-    "difficulty": 2
+    "difficulty": 3
   },
   {
     "title": "Ceremony",
