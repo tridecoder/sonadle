@@ -33,9 +33,12 @@ export function getTodaySong() {
 
 /**
  * Normaliza un caracter a su letra base sin acento.
+ * La ñ se trata como letra propia, no como variante de n.
  */
 function normalizeChar(c) {
-  return c.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+  const lower = c.toLowerCase()
+  if (lower === 'ñ') return 'ñ'
+  return lower.normalize('NFD').replace(/[\u0300-\u036f]/g, '')
 }
 
 /**

@@ -11,8 +11,9 @@ export default function Keyboard({ usedLetters, onGuess, disabled }) {
     function handleKeyDown(e) {
       if (disabled) return
       if (e.ctrlKey || e.metaKey || e.altKey) return
-      const key = e.key.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '')
-      if (/^[a-z]$/.test(key) && !usedLetters[key]) {
+      let key = e.key.toLowerCase()
+      if (key !== 'ñ') key = key.normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+      if ((/^[a-z]$/.test(key) || key === 'ñ') && !usedLetters[key]) {
         onGuess(key)
       }
     }
