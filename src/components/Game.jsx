@@ -35,7 +35,7 @@ export default function Game() {
         </div>
       </header>
 
-      <Hints hints={hints} />
+      <Hints hints={hints} revealedTitle={finished && revealedSong ? revealedSong.title : null} />
 
       {!finished && (
         <>

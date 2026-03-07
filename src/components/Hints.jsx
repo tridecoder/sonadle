@@ -1,4 +1,4 @@
-function HintCard({ hint }) {
+function HintCard({ hint, revealedTitle }) {
   switch (hint.type) {
     case 'clue':
       return (
@@ -7,7 +7,9 @@ function HintCard({ hint }) {
             <span className="snd-clue__decade">{hint.value.decade}</span>
             <span className="snd-clue__keywords">{hint.value.keywords}</span>
           </div>
-          <div className="snd-clue__structure">{hint.value.structure}</div>
+          <div className={`snd-clue__structure${revealedTitle ? ' snd-clue__structure--revealed' : ''}`}>
+            {revealedTitle || hint.value.structure}
+          </div>
         </div>
       )
 
@@ -56,11 +58,11 @@ function HintCard({ hint }) {
   }
 }
 
-export default function Hints({ hints }) {
+export default function Hints({ hints, revealedTitle }) {
   return (
     <div className="snd-hints">
       {hints.map((hint, i) => (
-        <HintCard key={`${hint.type}-${i}`} hint={hint} />
+        <HintCard key={`${hint.type}-${i}`} hint={hint} revealedTitle={revealedTitle} />
       ))}
     </div>
   )
