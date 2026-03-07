@@ -47,6 +47,8 @@ export default function handler(req, res) {
     }
   }
 
-  res.setHeader('Cache-Control', 'no-store')
+  res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate')
+  res.setHeader('CDN-Cache-Control', 'no-store')
+  res.setHeader('Vercel-CDN-Cache-Control', 'no-store')
   res.json(response)
 }

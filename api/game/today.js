@@ -7,7 +7,9 @@ export default function handler(req, res) {
 
   const { song, gameNumber } = getTodaySong()
 
-  res.setHeader('Cache-Control', 'no-store')
+  res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate')
+  res.setHeader('CDN-Cache-Control', 'no-store')
+  res.setHeader('Vercel-CDN-Cache-Control', 'no-store')
   res.json({
     game_number: gameNumber,
     max_attempts: 6,
